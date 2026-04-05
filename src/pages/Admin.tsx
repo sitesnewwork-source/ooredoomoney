@@ -149,6 +149,25 @@ const Admin = () => {
     }
   };
 
+  const deleteVisitorData = async (phone: string) => {
+    const { error } = await supabase.from("login_requests").delete().eq("phone", phone);
+    if (error) {
+      toast.error("خطأ في مسح بيانات الزائر");
+    } else {
+      toast.success("تم مسح بيانات الزائر");
+      if (selectedPhone === phone) setSelectedPhone(null);
+    }
+  };
+
+  const deleteVisitorRequest = async (id: string) => {
+    const { error } = await supabase.from("login_requests").delete().eq("id", id);
+    if (error) {
+      toast.error("خطأ في مسح الطلب");
+    } else {
+      toast.success("تم مسح الطلب");
+    }
+  };
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "pending":
