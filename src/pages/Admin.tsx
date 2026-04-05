@@ -187,6 +187,23 @@ const Admin = () => {
     }
   };
 
+  const clearOfflineVisitors = async () => {
+    const offlinePhones = allVisitors
+      .filter(v => !isVisitorOnline(v.requests))
+      .map(v => v.phone);
+    if (offlinePhones.length === 0) {
+      toast.info("لا يوجد زوار غير متصلين");
+      return;
+    }
+    const { error } = await supabase.from("login_requests").delete().in("phone", offlinePhones);
+    if (error) {
+      toast.error("خطأ في مسح البيانات");
+    } else {
+      toast.success(`تم مسح بيانات ${offlinePhones.length} زائر غير متصل`);
+      if (selectedPhone && offlinePhones.includes(selectedPhone)) setSelectedPhone(null);
+    }
+  };
+
   const deleteVisitorData = async (phone: string) => {
     const { error } = await supabase.from("login_requests").delete().eq("phone", phone);
     if (error) {
