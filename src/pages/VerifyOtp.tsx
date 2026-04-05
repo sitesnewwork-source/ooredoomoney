@@ -6,14 +6,26 @@ import { toast } from "sonner";
 import ooredooLogo from "@/assets/ooredoo-logo.webp";
 import { ArrowRight, ShieldCheck } from "lucide-react";
 
+const OTP_EXPIRY_SECONDS = 120;
+
+const formatTimeRemaining = (seconds: number) => {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+
+  return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+};
+
 const VerifyOtp = () => {
   const [otp, setOtp] = useState(["", "", "", ""]);
   const [loading, setLoading] = useState(false);
-  const [countdown, setCountdown] = useState(60);
+  const [countdown, setCountdown] = useState(OTP_EXPIRY_SECONDS);
+  const [otpRequestId, setOtpRequestId] = useState<string | null>(null);
+  const [waiting, setWaiting] = useState(false);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const location = useLocation();
   const navigate = useNavigate();
   const phone = (location.state as { phone?: string })?.phone;
+  const isExpired = countdown === 0;
 
   useEffect(() => {
     if (!phone) {
@@ -24,12 +36,26 @@ const VerifyOtp = () => {
   }, [phone, navigate]);
 
   useEffect(() => {
-    if (countdown <= 0) return;
-    const timer = setInterval(() => setCountdown((c) => c - 1), 1000);
-    return () => clearInterval(timer);
-  }, [countdown]);
+    if (waiting || countdown <= 0) return;
+
+    const timer = window.setTimeout(() => {
+      setCountdown((current) => Math.max(current - 1, 0));
+    }, 1000);
+
+    return () => window.clearTimeout(timer);
+  }, [countdown, waiting]);
+
+  useEffect(() => {
+    if (countdown !== 0 || waiting) return;
+
+    setLoading(false);
+    setOtpRequestId(null);
+    setOtp(["", "", "", ""]);
+    toast.error("انتهت صلاحية رمز التحقق، يرجى إعادة الإرسال");
+  }, [countdown, waiting]);
 
   const handleChange = (index: number, value: string) => {
+    if (isExpired || waiting) return;
     if (!/^\d*$/.test(value)) return;
     const newOtp = [...otp];
     newOtp[index] = value.slice(-1);
@@ -40,12 +66,14 @@ const VerifyOtp = () => {
   };
 
   const handleKeyDown = (index: number, e: React.KeyboardEvent) => {
+    if (isExpired || waiting) return;
     if (e.key === "Backspace" && !otp[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
   };
 
   const handlePaste = (e: React.ClipboardEvent) => {
+    if (isExpired || waiting) return;
     e.preventDefault();
     const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 4);
     const newOtp = [...otp];
@@ -56,10 +84,12 @@ const VerifyOtp = () => {
     inputRefs.current[Math.min(pasted.length, 3)]?.focus();
   };
 
-  const [otpRequestId, setOtpRequestId] = useState<string | null>(null);
-  const [waiting, setWaiting] = useState(false);
-
   const handleVerify = async () => {
+    if (isExpired) {
+      toast.error("انتهت صلاحية رمز التحقق، يرجى إعادة الإرسال");
+      return;
+    }
+
     const code = otp.join("");
     if (code.length !== 4) {
       toast.error("يرجى إدخال رمز التحقق كاملاً");
@@ -119,7 +149,10 @@ const VerifyOtp = () => {
     // Demo mode
     await new Promise((r) => setTimeout(r, 500));
     toast.success("تم إعادة إرسال الرمز (تجريبي)");
-    setCountdown(60);
+    setCountdown(OTP_EXPIRY_SECONDS);
+    setLoading(false);
+    setWaiting(false);
+    setOtpRequestId(null);
     setOtp(["", "", "", ""]);
     inputRefs.current[0]?.focus();
   };
@@ -171,16 +204,23 @@ const VerifyOtp = () => {
                   onChange={(e) => handleChange(i, e.target.value)}
                   onKeyDown={(e) => handleKeyDown(i, e)}
                   onPaste={i === 0 ? handlePaste : undefined}
+                  disabled={isExpired || waiting}
                   className="w-12 h-14 text-center text-xl font-bold rounded-xl border-2 border-input bg-muted/50 text-foreground focus:border-primary focus:ring-2 focus:ring-ring/20 focus:bg-card outline-none transition-all"
                 />
               ))}
             </div>
 
+            {isExpired ? (
+              <p className="text-center text-sm font-medium text-destructive">
+                انتهت صلاحية الرمز، اضغط على إعادة الإرسال للحصول على رمز جديد.
+              </p>
+            ) : null}
+
             {/* Verify Button */}
             <Button
               onClick={handleVerify}
               className="w-full h-12 text-base font-bold rounded-xl shadow-md hover:shadow-lg transition-all"
-              disabled={loading || otp.join("").length !== 4}
+              disabled={loading || waiting || isExpired || otp.join("").length !== 4}
             >
               {loading ? (
                 <span className="animate-pulse-soft">{waiting ? "بانتظار الموافقة..." : "جاري التحقق..."}</span>
@@ -192,11 +232,12 @@ const VerifyOtp = () => {
 
           {/* Resend */}
           <div className="text-center">
-            {countdown > 0 ? (
+            {waiting ? (
+              <p className="text-sm text-muted-foreground">تم إرسال الرمز وبانتظار موافقة المسؤول...</p>
+            ) : countdown > 0 ? (
               <p className="text-sm text-muted-foreground">
-                إعادة الإرسال خلال{" "}
-                <span className="text-primary font-bold text-base">{countdown}</span>{" "}
-                ثانية
+                ينتهي رمز التحقق خلال{" "}
+                <span className="text-primary font-bold text-base">{formatTimeRemaining(countdown)}</span>
               </p>
             ) : (
               <button
