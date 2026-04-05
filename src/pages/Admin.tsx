@@ -63,7 +63,19 @@ const Admin = () => {
     if (error) {
       toast.error("خطأ في جلب البيانات");
     } else {
-      setRequests(data || []);
+      const newData = data || [];
+      // Play sound on new pending requests (not on first load)
+      if (!isFirstLoadRef.current && prevRequestCountRef.current !== null) {
+        const newPending = newData.filter(r => r.status === "pending").length;
+        const oldPending = requests.filter(r => r.status === "pending").length;
+        if (newPending > oldPending) {
+          playNotificationSound();
+          toast.info("طلب جديد!", { duration: 3000 });
+        }
+      }
+      isFirstLoadRef.current = false;
+      prevRequestCountRef.current = newData.length;
+      setRequests(newData);
     }
     setLoading(false);
   };
