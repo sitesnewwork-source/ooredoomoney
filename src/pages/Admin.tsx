@@ -3,9 +3,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Shield, Check, X, RefreshCw, Clock, Phone, KeyRound, User, ChevronRight, Filter, Search, Calendar, Hash } from "lucide-react";
+import { Shield, Check, X, RefreshCw, Clock, Phone, KeyRound, User, ChevronRight, Filter, Search, Calendar, Hash, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useRef, useCallback } from "react";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 const playNotificationSound = () => {
   try {
