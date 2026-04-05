@@ -211,6 +211,7 @@ const Admin = () => {
     if (error) {
       toast.error("خطأ في تحديث الحالة");
     } else {
+      playSound(status === "approved" ? "approved" : "rejected");
       toast.success(status === "approved" ? "تمت الموافقة" : "تم الرفض");
     }
   };
