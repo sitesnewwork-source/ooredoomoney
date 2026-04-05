@@ -578,6 +578,9 @@ const Admin = () => {
                       <span className="text-xs hidden sm:inline">مسح الزائر</span>
                     </Button>
                   </AlertDialogTrigger>
+                <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground h-8 w-8 p-0" onClick={() => setSelectedPhone(null)} title="إغلاق">
+                  <X className="h-4 w-4" />
+                </Button>
                   <AlertDialogContent dir="rtl">
                     <AlertDialogHeader>
                       <AlertDialogTitle>مسح بيانات الزائر</AlertDialogTitle>
