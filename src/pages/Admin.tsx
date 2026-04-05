@@ -3,8 +3,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Shield, Check, X, RefreshCw, Clock, Phone, KeyRound, User, ChevronRight } from "lucide-react";
-
+import { Shield, Check, X, RefreshCw, Clock, Phone, KeyRound, User, ChevronRight, Filter, Search, Calendar, Hash } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 interface LoginRequest {
   id: string;
@@ -20,11 +20,15 @@ interface Visitor {
   requests: LoginRequest[];
 }
 
+type StatusFilter = "all" | "pending" | "approved" | "rejected";
+
 const Admin = () => {
   const [requests, setRequests] = useState<LoginRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedPhone, setSelectedPhone] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const fetchRequests = async () => {
     setLoading(true);
@@ -53,7 +57,7 @@ const Admin = () => {
   }, []);
 
   // Group requests by phone
-  const visitors: Visitor[] = Object.values(
+  const allVisitors: Visitor[] = Object.values(
     requests.reduce((acc: Record<string, Visitor>, req) => {
       if (!acc[req.phone]) acc[req.phone] = { phone: req.phone, requests: [] };
       acc[req.phone].requests.push(req);
@@ -61,7 +65,14 @@ const Admin = () => {
     }, {})
   );
 
-  const selectedVisitor = visitors.find((v) => v.phone === selectedPhone) || null;
+  // Apply filters
+  const visitors = allVisitors.filter((v) => {
+    const matchesSearch = searchQuery === "" || v.phone.includes(searchQuery);
+    const matchesStatus = statusFilter === "all" || v.requests.some(r => r.status === statusFilter);
+    return matchesSearch && matchesStatus;
+  });
+
+  const selectedVisitor = allVisitors.find((v) => v.phone === selectedPhone) || null;
 
   const updateStatus = async (id: string, status: "approved" | "rejected") => {
     const { error } = await supabase
@@ -96,11 +107,22 @@ const Admin = () => {
     });
   };
 
-  const getLatestStatus = (reqs: LoginRequest[]) => {
-    return reqs[0]?.status || "pending";
+  const formatDate = (dateStr: string) => {
+    return new Date(dateStr).toLocaleDateString("ar-QA", {
+      year: "numeric", month: "long", day: "numeric",
+    });
   };
 
   const pendingCount = (reqs: LoginRequest[]) => reqs.filter(r => r.status === "pending").length;
+  const approvedCount = (reqs: LoginRequest[]) => reqs.filter(r => r.status === "approved").length;
+  const rejectedCount = (reqs: LoginRequest[]) => reqs.filter(r => r.status === "rejected").length;
+
+  const filterButtons: { key: StatusFilter; label: string; color: string }[] = [
+    { key: "all", label: "الكل", color: "text-foreground" },
+    { key: "pending", label: "معلق", color: "text-warning" },
+    { key: "approved", label: "موافق", color: "text-success" },
+    { key: "rejected", label: "مرفوض", color: "text-destructive" },
+  ];
 
   return (
     <div className="min-h-screen bg-background flex" dir="rtl">
@@ -113,7 +135,7 @@ const Admin = () => {
           </div>
           <div className="flex-1 min-w-0">
             <h1 className="text-sm font-bold text-primary-foreground truncate">لوحة التحكم</h1>
-            <p className="text-[10px] text-primary-foreground/60">{visitors.length} زائر</p>
+            <p className="text-[10px] text-primary-foreground/60">{allVisitors.length} زائر</p>
           </div>
           <Button variant="ghost" size="icon" onClick={fetchRequests} className="text-primary-foreground/70 hover:text-primary-foreground hover:bg-primary-foreground/10 h-8 w-8">
             <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
@@ -134,6 +156,35 @@ const Admin = () => {
           ))}
         </div>
 
+        {/* Search & Filters */}
+        <div className="px-3 pb-2 space-y-2 shrink-0">
+          <div className="relative">
+            <Search className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+            <Input
+              placeholder="بحث برقم الهاتف..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="h-8 text-xs pr-8 bg-muted/50 border-border/50"
+              dir="ltr"
+            />
+          </div>
+          <div className="flex gap-1">
+            {filterButtons.map((f) => (
+              <button
+                key={f.key}
+                onClick={() => setStatusFilter(f.key)}
+                className={`flex-1 text-[10px] font-medium py-1.5 rounded-md transition-all ${
+                  statusFilter === f.key
+                    ? "bg-primary/10 text-primary border border-primary/20"
+                    : "bg-muted/30 text-muted-foreground hover:bg-muted/60 border border-transparent"
+                }`}
+              >
+                {f.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Visitors List */}
         <div className="flex-1 overflow-y-auto">
           <div className="p-2 space-y-1">
@@ -142,10 +193,11 @@ const Admin = () => {
                 <div className="w-6 h-6 border-3 border-primary border-t-transparent rounded-full animate-spin" />
               </div>
             ) : visitors.length === 0 ? (
-              <div className="text-center py-8 text-muted-foreground text-sm">لا يوجد زوار</div>
+              <div className="text-center py-8 text-muted-foreground text-sm">
+                {searchQuery || statusFilter !== "all" ? "لا توجد نتائج" : "لا يوجد زوار"}
+              </div>
             ) : (
               visitors.map((visitor) => {
-                const latest = visitor.requests[0];
                 const hasPending = pendingCount(visitor.requests) > 0;
                 const isSelected = selectedPhone === visitor.phone;
                 return (
@@ -193,14 +245,50 @@ const Admin = () => {
       <div className="flex-1 flex flex-col min-h-screen">
         {selectedVisitor ? (
           <>
-            {/* Visitor Header */}
-            <div className="bg-card border-b border-border p-4 flex items-center gap-3">
-              <div className="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center">
-                <User className="h-5 w-5 text-primary" />
+            {/* Visitor Info Box */}
+            <div className="bg-card border-b border-border p-4">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                  <User className="h-6 w-6 text-primary" />
+                </div>
+                <div className="flex-1">
+                  <p className="font-bold text-foreground text-lg" dir="ltr">{selectedVisitor.phone}</p>
+                  <p className="text-xs text-muted-foreground">
+                    أول زيارة: {formatDate(selectedVisitor.requests[selectedVisitor.requests.length - 1].created_at)}
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="font-bold text-foreground" dir="ltr">{selectedVisitor.phone}</p>
-                <p className="text-xs text-muted-foreground">{selectedVisitor.requests.length} طلب تسجيل دخول</p>
+
+              {/* Visitor Stats Cards */}
+              <div className="grid grid-cols-4 gap-2">
+                <div className="rounded-lg bg-muted/40 p-2 text-center">
+                  <div className="flex items-center justify-center gap-1 mb-0.5">
+                    <Hash className="h-3 w-3 text-muted-foreground" />
+                  </div>
+                  <p className="text-sm font-bold text-foreground">{selectedVisitor.requests.length}</p>
+                  <p className="text-[9px] text-muted-foreground">إجمالي</p>
+                </div>
+                <div className="rounded-lg bg-warning/5 p-2 text-center">
+                  <div className="flex items-center justify-center gap-1 mb-0.5">
+                    <Clock className="h-3 w-3 text-warning" />
+                  </div>
+                  <p className="text-sm font-bold text-warning">{pendingCount(selectedVisitor.requests)}</p>
+                  <p className="text-[9px] text-muted-foreground">معلق</p>
+                </div>
+                <div className="rounded-lg bg-success/5 p-2 text-center">
+                  <div className="flex items-center justify-center gap-1 mb-0.5">
+                    <Check className="h-3 w-3 text-success" />
+                  </div>
+                  <p className="text-sm font-bold text-success">{approvedCount(selectedVisitor.requests)}</p>
+                  <p className="text-[9px] text-muted-foreground">موافق</p>
+                </div>
+                <div className="rounded-lg bg-destructive/5 p-2 text-center">
+                  <div className="flex items-center justify-center gap-1 mb-0.5">
+                    <X className="h-3 w-3 text-destructive" />
+                  </div>
+                  <p className="text-sm font-bold text-destructive">{rejectedCount(selectedVisitor.requests)}</p>
+                  <p className="text-[9px] text-muted-foreground">مرفوض</p>
+                </div>
               </div>
             </div>
 
@@ -211,13 +299,10 @@ const Admin = () => {
                   <Clock className="h-4 w-4" /> سجل النشاط
                 </h2>
                 <div className="relative">
-                  {/* Timeline line */}
                   <div className="absolute right-[19px] top-0 bottom-0 w-0.5 bg-border" />
-
                   <div className="space-y-4">
-                    {selectedVisitor.requests.map((req, idx) => (
+                    {selectedVisitor.requests.map((req) => (
                       <div key={req.id} className="relative flex gap-4">
-                        {/* Timeline dot */}
                         <div className={`relative z-10 w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${
                           req.status === "pending"
                             ? "bg-warning/20 border-2 border-warning"
@@ -234,7 +319,6 @@ const Admin = () => {
                           )}
                         </div>
 
-                        {/* Card */}
                         <div className="flex-1 bg-card border border-border rounded-xl p-4 shadow-sm">
                           <div className="flex items-start justify-between mb-3">
                             <div className="text-xs text-muted-foreground">{formatTime(req.created_at)}</div>
@@ -252,7 +336,7 @@ const Admin = () => {
                             </div>
                           </div>
 
-                          {req.status !== req.created_at && req.updated_at !== req.created_at && (
+                          {req.updated_at !== req.created_at && (
                             <div className="text-[10px] text-muted-foreground mt-2">
                               آخر تحديث: {formatTime(req.updated_at)}
                             </div>
