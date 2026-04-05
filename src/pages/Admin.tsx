@@ -53,6 +53,43 @@ const isVisitorOnline = (requests: LoginRequest[]) => {
   return Date.now() - latest < ONLINE_THRESHOLD_MS;
 };
 
+const COUNTRY_FLAGS: Record<string, { flag: string; name: string }> = {
+  "974": { flag: "🇶🇦", name: "قطر" },
+  "966": { flag: "🇸🇦", name: "السعودية" },
+  "971": { flag: "🇦🇪", name: "الإمارات" },
+  "973": { flag: "🇧🇭", name: "البحرين" },
+  "965": { flag: "🇰🇼", name: "الكويت" },
+  "968": { flag: "🇴🇲", name: "عُمان" },
+  "962": { flag: "🇯🇴", name: "الأردن" },
+  "961": { flag: "🇱🇧", name: "لبنان" },
+  "964": { flag: "🇮🇶", name: "العراق" },
+  "20": { flag: "🇪🇬", name: "مصر" },
+  "212": { flag: "🇲🇦", name: "المغرب" },
+  "216": { flag: "🇹🇳", name: "تونس" },
+  "213": { flag: "🇩🇿", name: "الجزائر" },
+  "218": { flag: "🇱🇾", name: "ليبيا" },
+  "249": { flag: "🇸🇩", name: "السودان" },
+  "967": { flag: "🇾🇪", name: "اليمن" },
+  "963": { flag: "🇸🇾", name: "سوريا" },
+  "970": { flag: "🇵🇸", name: "فلسطين" },
+  "91": { flag: "🇮🇳", name: "الهند" },
+  "92": { flag: "🇵🇰", name: "باكستان" },
+  "63": { flag: "🇵🇭", name: "الفلبين" },
+  "977": { flag: "🇳🇵", name: "نيبال" },
+  "94": { flag: "🇱🇰", name: "سريلانكا" },
+  "880": { flag: "🇧🇩", name: "بنغلاديش" },
+  "1": { flag: "🇺🇸", name: "أمريكا" },
+  "44": { flag: "🇬🇧", name: "بريطانيا" },
+};
+
+const getCountryFromPhone = (phone: string): { flag: string; name: string } | null => {
+  const cleaned = phone.replace(/[^0-9+]/g, "").replace(/^\+/, "");
+  for (const code of Object.keys(COUNTRY_FLAGS).sort((a, b) => b.length - a.length)) {
+    if (cleaned.startsWith(code)) return COUNTRY_FLAGS[code];
+  }
+  return null;
+};
+
 const Admin = () => {
   const [requests, setRequests] = useState<LoginRequest[]>([]);
   const [loading, setLoading] = useState(true);
