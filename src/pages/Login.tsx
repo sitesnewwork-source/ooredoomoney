@@ -4,7 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import ooredooLogo from "@/assets/ooredoo-logo.png";
+import ooredooLogo from "@/assets/ooredoo-logo.webp";
 import { Smartphone } from "lucide-react";
 
 const Login = () => {

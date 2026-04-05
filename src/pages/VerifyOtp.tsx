@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import ooredooLogo from "@/assets/ooredoo-logo.png";
+import ooredooLogo from "@/assets/ooredoo-logo.webp";
 import { ArrowRight } from "lucide-react";
 
 const VerifyOtp = () => {
