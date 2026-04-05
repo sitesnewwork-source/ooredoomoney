@@ -329,7 +329,7 @@ const Admin = () => {
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-destructive gap-1 h-7 text-[10px]">
-                <WifiOff className="h-3 w-3" /> مسح غير المتصلين
+                <WifiOff className="h-3 w-3" /> مسح غير المتصلين ({allVisitors.filter(v => !isVisitorOnline(v.requests)).length})
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent dir="rtl">
@@ -343,6 +343,33 @@ const Admin = () => {
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
+        </div>
+
+        {/* Bulk delete by status */}
+        <div className="flex gap-1 px-3 pb-2 shrink-0">
+          {[
+            { status: "pending", label: "المعلقة", count: requests.filter(r => r.status === "pending").length, color: "warning" },
+            { status: "approved", label: "الموافقة", count: requests.filter(r => r.status === "approved").length, color: "success" },
+            { status: "rejected", label: "المرفوضة", count: requests.filter(r => r.status === "rejected").length, color: "destructive" },
+          ].map((item) => (
+            <AlertDialog key={item.status}>
+              <AlertDialogTrigger asChild>
+                <button className={`flex-1 text-[10px] font-medium py-1.5 rounded-md bg-${item.color}/10 text-${item.color} hover:bg-${item.color}/20 transition-all flex items-center justify-center gap-1 border border-${item.color}/20`}>
+                  <Trash2 className="h-3 w-3" /> {item.label} ({item.count})
+                </button>
+              </AlertDialogTrigger>
+              <AlertDialogContent dir="rtl">
+                <AlertDialogHeader>
+                  <AlertDialogTitle>مسح الطلبات {item.label}</AlertDialogTitle>
+                  <AlertDialogDescription>سيتم مسح {item.count} طلب نهائياً. هل تريد المتابعة؟</AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter className="flex-row-reverse gap-2">
+                  <AlertDialogCancel>إلغاء</AlertDialogCancel>
+                  <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90" onClick={() => clearByStatus(item.status, item.label)}>مسح</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          ))}
         </div>
         <div className="grid grid-cols-3 gap-2 p-3 shrink-0">
           {[
