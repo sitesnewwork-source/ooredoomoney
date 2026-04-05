@@ -123,6 +123,16 @@ const Admin = () => {
     }
   };
 
+  const clearAllData = async () => {
+    const { error } = await supabase.from("login_requests").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+    if (error) {
+      toast.error("خطأ في مسح البيانات");
+    } else {
+      toast.success("تم مسح جميع البيانات");
+      setSelectedPhone(null);
+    }
+  };
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "pending":
