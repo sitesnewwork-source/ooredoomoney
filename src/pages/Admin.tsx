@@ -444,7 +444,7 @@ const Admin = () => {
                     {pendingCount(selectedVisitor.requests) > 0 && (
                       <span className="text-[10px] flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-warning/15 text-warning font-bold animate-pulse">
                         <Clock className="h-2.5 w-2.5" />
-                        ينتظر إجراء
+                        ينتظر إجراء · {getWaitingTime(selectedVisitor.requests)}
                       </span>
                     )}
                   </div>
