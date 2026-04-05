@@ -3,12 +3,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Shield, Check, X, RefreshCw, Clock, Phone, KeyRound, User, ChevronRight, Filter, Search, Calendar, Hash, Trash2, Wifi, WifiOff } from "lucide-react";
+import { Shield, Check, X, RefreshCw, Clock, Phone, KeyRound, User, ChevronRight, Filter, Search, Calendar, Hash, Trash2, Wifi, WifiOff, Volume2, VolumeX } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useRef, useCallback } from "react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
-const playSound = (type: "new" | "approved" | "rejected" | "delete") => {
+const playSound = (type: "new" | "approved" | "rejected" | "delete", muted?: boolean) => {
+  if (muted) return;
   try {
     const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
     const osc = ctx.createOscillator();
@@ -139,6 +140,7 @@ const Admin = () => {
   const prevRequestCountRef = useRef<number | null>(null);
   const isFirstLoadRef = useRef(true);
   const [, setTick] = useState(0);
+  const [soundMuted, setSoundMuted] = useState(() => localStorage.getItem("admin_sound_muted") === "true");
 
   const fetchRequests = async () => {
     setLoading(true);
@@ -156,7 +158,7 @@ const Admin = () => {
         const newPending = newData.filter(r => r.status === "pending").length;
         const oldPending = requests.filter(r => r.status === "pending").length;
         if (newPending > oldPending) {
-          playSound("new");
+          playSound("new", soundMuted);
           toast.info("طلب جديد!", { duration: 3000 });
         }
       }
@@ -211,7 +213,7 @@ const Admin = () => {
     if (error) {
       toast.error("خطأ في تحديث الحالة");
     } else {
-      playSound(status === "approved" ? "approved" : "rejected");
+      playSound(status === "approved" ? "approved" : "rejected", soundMuted);
       toast.success(status === "approved" ? "تمت الموافقة" : "تم الرفض");
     }
   };
@@ -221,7 +223,7 @@ const Admin = () => {
     if (error) {
       toast.error("خطأ في مسح البيانات");
     } else {
-      playSound("delete");
+      playSound("delete", soundMuted);
       toast.success("تم مسح جميع البيانات");
       setSelectedPhone(null);
     }
@@ -239,7 +241,7 @@ const Admin = () => {
     if (error) {
       toast.error("خطأ في مسح البيانات");
     } else {
-      playSound("delete");
+      playSound("delete", soundMuted);
       toast.success(`تم مسح بيانات ${offlinePhones.length} زائر غير متصل`);
       if (selectedPhone && offlinePhones.includes(selectedPhone)) setSelectedPhone(null);
     }
@@ -250,7 +252,7 @@ const Admin = () => {
     if (error) {
       toast.error("خطأ في مسح البيانات");
     } else {
-      playSound("delete");
+      playSound("delete", soundMuted);
       toast.success(`تم مسح جميع الطلبات ${label}`);
     }
   };
@@ -260,7 +262,7 @@ const Admin = () => {
     if (error) {
       toast.error("خطأ في مسح بيانات الزائر");
     } else {
-      playSound("delete");
+      playSound("delete", soundMuted);
       toast.success("تم مسح بيانات الزائر");
       if (selectedPhone === phone) setSelectedPhone(null);
     }
@@ -271,7 +273,7 @@ const Admin = () => {
     if (error) {
       toast.error("خطأ في مسح الطلب");
     } else {
-      playSound("delete");
+      playSound("delete", soundMuted);
       toast.success("تم مسح الطلب");
     }
   };
@@ -349,6 +351,20 @@ const Admin = () => {
             <h1 className="text-sm font-bold text-primary-foreground truncate">لوحة التحكم</h1>
             <p className="text-[10px] text-primary-foreground/60">{allVisitors.length} زائر</p>
           </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => {
+              const next = !soundMuted;
+              setSoundMuted(next);
+              localStorage.setItem("admin_sound_muted", String(next));
+              if (!next) playSound("approved", false);
+            }}
+            className="text-primary-foreground/70 hover:text-primary-foreground hover:bg-primary-foreground/10 h-8 w-8"
+            title={soundMuted ? "تفعيل الصوت" : "كتم الصوت"}
+          >
+            {soundMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+          </Button>
           <Button variant="ghost" size="icon" onClick={fetchRequests} className="text-primary-foreground/70 hover:text-primary-foreground hover:bg-primary-foreground/10 h-8 w-8">
             <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
           </Button>
