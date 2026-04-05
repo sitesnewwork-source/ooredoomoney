@@ -303,10 +303,14 @@ const Admin = () => {
                   <button
                     key={visitor.phone}
                     onClick={() => setSelectedPhone(visitor.phone)}
-                    className={`w-full text-right rounded-lg p-3 transition-all flex items-center gap-3 ${
-                      isSelected
-                        ? "bg-primary/10 border border-primary/20"
-                        : "hover:bg-muted/70 border border-transparent"
+                    className={`w-full text-right rounded-lg p-3 transition-all flex items-center gap-3 relative overflow-hidden ${
+                      hasPending
+                        ? isSelected
+                          ? "bg-warning/15 border border-warning/30 shadow-sm shadow-warning/10"
+                          : "bg-warning/5 border border-warning/20 hover:bg-warning/10 animate-pulse-soft"
+                        : isSelected
+                          ? "bg-primary/10 border border-primary/20"
+                          : "hover:bg-muted/70 border border-transparent"
                     }`}
                   >
                     <div className={`relative w-9 h-9 rounded-full flex items-center justify-center shrink-0 ${
@@ -317,10 +321,13 @@ const Admin = () => {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold text-foreground truncate" dir="ltr">{visitor.phone}</p>
-                      <div className="flex items-center gap-2 mt-0.5">
+                      <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                         <span className="text-[10px] text-muted-foreground">{visitor.requests.length} طلب</span>
                         {hasPending && (
-                          <span className="text-[10px] text-warning font-medium">{pendingCount(visitor.requests)} معلق</span>
+                          <span className="text-[10px] text-warning font-bold flex items-center gap-0.5">
+                            <Clock className="h-2.5 w-2.5 animate-pulse" />
+                            ينتظر إجراء ({pendingCount(visitor.requests)})
+                          </span>
                         )}
                         <span className={`text-[10px] flex items-center gap-0.5 ${online ? "text-green-500" : "text-muted-foreground/60"}`}>
                           {online ? <Wifi className="h-2.5 w-2.5" /> : <WifiOff className="h-2.5 w-2.5" />}
