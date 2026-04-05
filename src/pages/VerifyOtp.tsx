@@ -168,7 +168,7 @@ const VerifyOtp = () => {
               disabled={loading || otp.join("").length !== 6}
             >
               {loading ? (
-                <span className="animate-pulse-soft">جاري التحقق...</span>
+                <span className="animate-pulse-soft">{waiting ? "بانتظار الموافقة..." : "جاري التحقق..."}</span>
               ) : (
                 "تأكيد"
               )}
