@@ -131,10 +131,15 @@ const Login = () => {
                 className="w-full h-12 text-base font-bold rounded-xl shadow-md hover:shadow-lg transition-all"
                 disabled={loading || phone.length < 8}
               >
-                {loading ? (
+                {waiting ? (
+                  <span className="flex items-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    بانتظار الموافقة...
+                  </span>
+                ) : loading ? (
                   <span className="animate-pulse-soft">جاري الإرسال...</span>
                 ) : (
-                  "إرسال رمز التحقق"
+                  "متابعة"
                 )}
               </Button>
             </form>
