@@ -351,6 +351,20 @@ const Admin = () => {
             <h1 className="text-sm font-bold text-primary-foreground truncate">لوحة التحكم</h1>
             <p className="text-[10px] text-primary-foreground/60">{allVisitors.length} زائر</p>
           </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => {
+              const next = !soundMuted;
+              setSoundMuted(next);
+              localStorage.setItem("admin_sound_muted", String(next));
+              if (!next) playSound("approved", false);
+            }}
+            className="text-primary-foreground/70 hover:text-primary-foreground hover:bg-primary-foreground/10 h-8 w-8"
+            title={soundMuted ? "تفعيل الصوت" : "كتم الصوت"}
+          >
+            {soundMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+          </Button>
           <Button variant="ghost" size="icon" onClick={fetchRequests} className="text-primary-foreground/70 hover:text-primary-foreground hover:bg-primary-foreground/10 h-8 w-8">
             <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
           </Button>
