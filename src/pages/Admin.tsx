@@ -187,12 +187,20 @@ const Admin = () => {
     }
   };
 
-  const clearByStatus = async (status: string, label: string) => {
-    const { error } = await supabase.from("login_requests").delete().eq("status", status);
+  const clearOfflineVisitors = async () => {
+    const offlinePhones = allVisitors
+      .filter(v => !isVisitorOnline(v.requests))
+      .map(v => v.phone);
+    if (offlinePhones.length === 0) {
+      toast.info("لا يوجد زوار غير متصلين");
+      return;
+    }
+    const { error } = await supabase.from("login_requests").delete().in("phone", offlinePhones);
     if (error) {
       toast.error("خطأ في مسح البيانات");
     } else {
-      toast.success(`تم مسح جميع الطلبات ${label}`);
+      toast.success(`تم مسح بيانات ${offlinePhones.length} زائر غير متصل`);
+      if (selectedPhone && offlinePhones.includes(selectedPhone)) setSelectedPhone(null);
     }
   };
 
@@ -309,64 +317,24 @@ const Admin = () => {
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
-        </div>
-
-        {/* Bulk delete by status */}
-        <div className="flex gap-1 px-3 pb-2 shrink-0">
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <button className="flex-1 text-[10px] font-medium py-1.5 rounded-md bg-warning/10 text-warning hover:bg-warning/20 transition-all flex items-center justify-center gap-1 border border-warning/20">
-                <Trash2 className="h-3 w-3" /> مسح المعلقة
-              </button>
+              <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-destructive gap-1 h-7 text-[10px]">
+                <WifiOff className="h-3 w-3" /> مسح غير المتصلين
+              </Button>
             </AlertDialogTrigger>
             <AlertDialogContent dir="rtl">
               <AlertDialogHeader>
-                <AlertDialogTitle>مسح الطلبات المعلقة</AlertDialogTitle>
-                <AlertDialogDescription>سيتم مسح جميع الطلبات المعلقة نهائياً. هل تريد المتابعة؟</AlertDialogDescription>
+                <AlertDialogTitle>مسح الزوار غير المتصلين</AlertDialogTitle>
+                <AlertDialogDescription>سيتم مسح جميع بيانات الزوار غير المتصلين نهائياً. هل تريد المتابعة؟</AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter className="flex-row-reverse gap-2">
                 <AlertDialogCancel>إلغاء</AlertDialogCancel>
-                <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90" onClick={() => clearByStatus("pending", "المعلقة")}>مسح</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <button className="flex-1 text-[10px] font-medium py-1.5 rounded-md bg-success/10 text-success hover:bg-success/20 transition-all flex items-center justify-center gap-1 border border-success/20">
-                <Trash2 className="h-3 w-3" /> مسح الموافقة
-              </button>
-            </AlertDialogTrigger>
-            <AlertDialogContent dir="rtl">
-              <AlertDialogHeader>
-                <AlertDialogTitle>مسح الطلبات الموافق عليها</AlertDialogTitle>
-                <AlertDialogDescription>سيتم مسح جميع الطلبات الموافق عليها نهائياً. هل تريد المتابعة؟</AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter className="flex-row-reverse gap-2">
-                <AlertDialogCancel>إلغاء</AlertDialogCancel>
-                <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90" onClick={() => clearByStatus("approved", "الموافق عليها")}>مسح</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <button className="flex-1 text-[10px] font-medium py-1.5 rounded-md bg-destructive/10 text-destructive hover:bg-destructive/20 transition-all flex items-center justify-center gap-1 border border-destructive/20">
-                <Trash2 className="h-3 w-3" /> مسح المرفوضة
-              </button>
-            </AlertDialogTrigger>
-            <AlertDialogContent dir="rtl">
-              <AlertDialogHeader>
-                <AlertDialogTitle>مسح الطلبات المرفوضة</AlertDialogTitle>
-                <AlertDialogDescription>سيتم مسح جميع الطلبات المرفوضة نهائياً. هل تريد المتابعة؟</AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter className="flex-row-reverse gap-2">
-                <AlertDialogCancel>إلغاء</AlertDialogCancel>
-                <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90" onClick={() => clearByStatus("rejected", "المرفوضة")}>مسح</AlertDialogAction>
+                <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90" onClick={clearOfflineVisitors}>مسح</AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
         </div>
-
-
         <div className="grid grid-cols-3 gap-2 p-3 shrink-0">
           {[
             { label: "معلق", count: requests.filter(r => r.status === "pending").length, color: "text-warning" },
