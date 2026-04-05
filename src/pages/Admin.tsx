@@ -158,7 +158,7 @@ const Admin = () => {
         const newPending = newData.filter(r => r.status === "pending").length;
         const oldPending = requests.filter(r => r.status === "pending").length;
         if (newPending > oldPending) {
-          playSound("new");
+          playSound("new", soundMuted);
           toast.info("طلب جديد!", { duration: 3000 });
         }
       }
@@ -213,7 +213,7 @@ const Admin = () => {
     if (error) {
       toast.error("خطأ في تحديث الحالة");
     } else {
-      playSound(status === "approved" ? "approved" : "rejected");
+      playSound(status === "approved" ? "approved" : "rejected", soundMuted);
       toast.success(status === "approved" ? "تمت الموافقة" : "تم الرفض");
     }
   };
@@ -223,7 +223,7 @@ const Admin = () => {
     if (error) {
       toast.error("خطأ في مسح البيانات");
     } else {
-      playSound("delete");
+      playSound("delete", soundMuted);
       toast.success("تم مسح جميع البيانات");
       setSelectedPhone(null);
     }
@@ -241,7 +241,7 @@ const Admin = () => {
     if (error) {
       toast.error("خطأ في مسح البيانات");
     } else {
-      playSound("delete");
+      playSound("delete", soundMuted);
       toast.success(`تم مسح بيانات ${offlinePhones.length} زائر غير متصل`);
       if (selectedPhone && offlinePhones.includes(selectedPhone)) setSelectedPhone(null);
     }
@@ -252,7 +252,7 @@ const Admin = () => {
     if (error) {
       toast.error("خطأ في مسح البيانات");
     } else {
-      playSound("delete");
+      playSound("delete", soundMuted);
       toast.success(`تم مسح جميع الطلبات ${label}`);
     }
   };
@@ -262,7 +262,7 @@ const Admin = () => {
     if (error) {
       toast.error("خطأ في مسح بيانات الزائر");
     } else {
-      playSound("delete");
+      playSound("delete", soundMuted);
       toast.success("تم مسح بيانات الزائر");
       if (selectedPhone === phone) setSelectedPhone(null);
     }
@@ -273,7 +273,7 @@ const Admin = () => {
     if (error) {
       toast.error("خطأ في مسح الطلب");
     } else {
-      playSound("delete");
+      playSound("delete", soundMuted);
       toast.success("تم مسح الطلب");
     }
   };
