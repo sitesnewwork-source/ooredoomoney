@@ -156,7 +156,7 @@ const Admin = () => {
         const newPending = newData.filter(r => r.status === "pending").length;
         const oldPending = requests.filter(r => r.status === "pending").length;
         if (newPending > oldPending) {
-          playNotificationSound();
+          playSound("new");
           toast.info("طلب جديد!", { duration: 3000 });
         }
       }
