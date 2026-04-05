@@ -22,15 +22,10 @@ const Login = () => {
     setLoading(true);
     const formattedPhone = phone.startsWith("+") ? phone : `+974${phone}`;
 
-    const { error } = await supabase.auth.signInWithOtp({ phone: formattedPhone });
-
-    if (error) {
-      toast.error("حدث خطأ في إرسال رمز التحقق");
-      console.error(error);
-    } else {
-      toast.success("تم إرسال رمز التحقق");
-      navigate("/verify", { state: { phone: formattedPhone } });
-    }
+    // Demo mode - simulate OTP sending
+    await new Promise((r) => setTimeout(r, 800));
+    toast.success("تم إرسال رمز التحقق (تجريبي)");
+    navigate("/verify", { state: { phone: formattedPhone } });
     setLoading(false);
   };
 

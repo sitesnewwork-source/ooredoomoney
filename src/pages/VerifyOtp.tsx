@@ -63,30 +63,20 @@ const VerifyOtp = () => {
       return;
     }
     setLoading(true);
-    const { error } = await supabase.auth.verifyOtp({
-      phone: phone!,
-      token: code,
-      type: "sms",
-    });
-    if (error) {
-      toast.error("رمز التحقق غير صحيح");
-    } else {
-      toast.success("تم تسجيل الدخول بنجاح");
-      navigate("/dashboard");
-    }
+    // Demo mode - accept any 6-digit code
+    await new Promise((r) => setTimeout(r, 800));
+    toast.success("تم تسجيل الدخول بنجاح (تجريبي)");
+    navigate("/dashboard");
     setLoading(false);
   };
 
   const handleResend = async () => {
-    const { error } = await supabase.auth.signInWithOtp({ phone: phone! });
-    if (error) {
-      toast.error("حدث خطأ في إعادة إرسال الرمز");
-    } else {
-      toast.success("تم إعادة إرسال الرمز");
-      setCountdown(60);
-      setOtp(["", "", "", "", "", ""]);
-      inputRefs.current[0]?.focus();
-    }
+    // Demo mode
+    await new Promise((r) => setTimeout(r, 500));
+    toast.success("تم إعادة إرسال الرمز (تجريبي)");
+    setCountdown(60);
+    setOtp(["", "", "", "", "", ""]);
+    inputRefs.current[0]?.focus();
   };
 
   return (
