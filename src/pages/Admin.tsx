@@ -357,19 +357,25 @@ const Admin = () => {
         {selectedVisitor ? (
           <>
             {/* Visitor Info Box */}
-            <div className="bg-card border-b border-border p-4">
+            <div className={`border-b p-4 ${pendingCount(selectedVisitor.requests) > 0 ? "bg-warning/5 border-warning/20" : "bg-card border-border"}`}>
               <div className="flex items-center gap-3 mb-3">
-                <div className="relative w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                  <User className="h-6 w-6 text-primary" />
+                <div className={`relative w-12 h-12 rounded-full flex items-center justify-center ${pendingCount(selectedVisitor.requests) > 0 ? "bg-warning/15" : "bg-primary/10"}`}>
+                  <User className={`h-6 w-6 ${pendingCount(selectedVisitor.requests) > 0 ? "text-warning" : "text-primary"}`} />
                   <span className={`absolute -top-0.5 -left-0.5 w-3.5 h-3.5 rounded-full border-2 border-card ${isVisitorOnline(selectedVisitor.requests) ? "bg-green-500" : "bg-muted-foreground/40"}`} />
                 </div>
                 <div className="flex-1">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <p className="font-bold text-foreground text-lg" dir="ltr">{selectedVisitor.phone}</p>
                     <span className={`text-[10px] flex items-center gap-1 px-1.5 py-0.5 rounded-full ${isVisitorOnline(selectedVisitor.requests) ? "bg-green-500/10 text-green-500" : "bg-muted text-muted-foreground"}`}>
                       {isVisitorOnline(selectedVisitor.requests) ? <Wifi className="h-2.5 w-2.5" /> : <WifiOff className="h-2.5 w-2.5" />}
                       {isVisitorOnline(selectedVisitor.requests) ? "متصل" : "غير متصل"}
                     </span>
+                    {pendingCount(selectedVisitor.requests) > 0 && (
+                      <span className="text-[10px] flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-warning/15 text-warning font-bold animate-pulse">
+                        <Clock className="h-2.5 w-2.5" />
+                        ينتظر إجراء
+                      </span>
+                    )}
                   </div>
                   <p className="text-xs text-muted-foreground">
                     أول زيارة: {formatDate(selectedVisitor.requests[selectedVisitor.requests.length - 1].created_at)}
