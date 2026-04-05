@@ -250,6 +250,7 @@ const Admin = () => {
     if (error) {
       toast.error("خطأ في مسح البيانات");
     } else {
+      playSound("delete");
       toast.success(`تم مسح جميع الطلبات ${label}`);
     }
   };
