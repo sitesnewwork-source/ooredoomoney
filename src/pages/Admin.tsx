@@ -115,7 +115,9 @@ const Admin = () => {
   const visitors = allVisitors.filter((v) => {
     const matchesSearch = searchQuery === "" || v.phone.includes(searchQuery);
     const matchesStatus = statusFilter === "all" || v.requests.some(r => r.status === statusFilter);
-    return matchesSearch && matchesStatus;
+    const online = isVisitorOnline(v.requests);
+    const matchesOnline = onlineFilter === "all" || (onlineFilter === "online" ? online : !online);
+    return matchesSearch && matchesStatus && matchesOnline;
   });
 
   const selectedVisitor = allVisitors.find((v) => v.phone === selectedPhone) || null;
