@@ -471,7 +471,10 @@ const Admin = () => {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5">
                         {getCountryFromPhone(visitor.phone) && (
-                          <span className="text-sm" title={getCountryFromPhone(visitor.phone)!.name}>{getCountryFromPhone(visitor.phone)!.flag}</span>
+                          <span className="flex items-center gap-0.5">
+                            <span className="text-sm">{getCountryFromPhone(visitor.phone)!.flag}</span>
+                            <span className="text-[9px] text-muted-foreground">{getCountryFromPhone(visitor.phone)!.name}</span>
+                          </span>
                         )}
                         <p className="text-sm font-semibold text-foreground truncate" dir="ltr">{visitor.phone}</p>
                       </div>
