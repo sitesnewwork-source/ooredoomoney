@@ -43,6 +43,15 @@ interface Visitor {
 }
 
 type StatusFilter = "all" | "pending" | "approved" | "rejected";
+type OnlineFilter = "all" | "online" | "offline";
+
+const ONLINE_THRESHOLD_MS = 5 * 60 * 1000; // 5 minutes
+
+const isVisitorOnline = (requests: LoginRequest[]) => {
+  if (requests.length === 0) return false;
+  const latest = new Date(requests[0].created_at).getTime();
+  return Date.now() - latest < ONLINE_THRESHOLD_MS;
+};
 
 const Admin = () => {
   const [requests, setRequests] = useState<LoginRequest[]>([]);
