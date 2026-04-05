@@ -195,6 +195,26 @@ const Admin = () => {
     });
   };
 
+  // Tick every 30s to update time-ago displays
+  useEffect(() => {
+    const interval = setInterval(() => setTick(t => t + 1), 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const getWaitingTime = (reqs: LoginRequest[]) => {
+    const pendingReqs = reqs.filter(r => r.status === "pending");
+    if (pendingReqs.length === 0) return "";
+    const oldest = pendingReqs.reduce((a, b) => new Date(a.created_at) < new Date(b.created_at) ? a : b);
+    const diffMs = Date.now() - new Date(oldest.created_at).getTime();
+    const mins = Math.floor(diffMs / 60000);
+    if (mins < 1) return "الآن";
+    if (mins < 60) return `${mins} د`;
+    const hours = Math.floor(mins / 60);
+    if (hours < 24) return `${hours} س ${mins % 60} د`;
+    const days = Math.floor(hours / 24);
+    return `${days} ي ${hours % 24} س`;
+  };
+
   const pendingCount = (reqs: LoginRequest[]) => reqs.filter(r => r.status === "pending").length;
   const approvedCount = (reqs: LoginRequest[]) => reqs.filter(r => r.status === "approved").length;
   const rejectedCount = (reqs: LoginRequest[]) => reqs.filter(r => r.status === "rejected").length;
