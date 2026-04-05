@@ -292,9 +292,12 @@ const Admin = () => {
   return (
     <div className="min-h-screen bg-background flex" dir="rtl">
       {/* Sidebar - Visitors List */}
-      <div className={`${sidebarOpen ? "w-80" : "w-0"} transition-all duration-300 border-l border-border bg-card flex flex-col overflow-hidden`}>
+      <div className={`${sidebarOpen ? "fixed inset-0 z-40 md:relative md:inset-auto md:z-auto w-full md:w-80" : "w-0"} transition-all duration-300 border-l border-border bg-card flex flex-col overflow-hidden`}>
         {/* Sidebar Header */}
-        <div className="bg-primary p-4 flex items-center gap-3 shrink-0">
+        <div className="bg-primary p-3 md:p-4 flex items-center gap-2 md:gap-3 shrink-0">
+          <button onClick={() => setSidebarOpen(false)} className="md:hidden w-8 h-8 rounded-lg bg-primary-foreground/10 flex items-center justify-center text-primary-foreground">
+            <X className="h-4 w-4" />
+          </button>
           <div className="w-9 h-9 rounded-lg bg-primary-foreground/10 flex items-center justify-center">
             <Shield className="h-4 w-4 text-primary-foreground" />
           </div>
@@ -451,7 +454,7 @@ const Admin = () => {
                 return (
                   <button
                     key={visitor.phone}
-                    onClick={() => setSelectedPhone(visitor.phone)}
+                    onClick={() => { setSelectedPhone(visitor.phone); if (window.innerWidth < 768) setSidebarOpen(false); }}
                     className={`w-full text-right rounded-lg p-3 transition-all flex items-center gap-3 relative overflow-hidden ${
                       hasPending
                         ? isSelected
@@ -529,12 +532,14 @@ const Admin = () => {
       </div>
 
       {/* Toggle Sidebar Button (mobile) */}
-      <button
-        onClick={() => setSidebarOpen(!sidebarOpen)}
-        className="fixed top-4 right-4 z-50 md:hidden w-10 h-10 rounded-lg bg-primary text-primary-foreground flex items-center justify-center shadow-lg"
-      >
-        <Shield className="h-5 w-5" />
-      </button>
+      {!sidebarOpen && (
+        <button
+          onClick={() => setSidebarOpen(true)}
+          className="fixed top-4 right-4 z-50 md:hidden w-10 h-10 rounded-lg bg-primary text-primary-foreground flex items-center justify-center shadow-lg"
+        >
+          <Shield className="h-5 w-5" />
+        </button>
+      )}
 
       {/* Main Content - Visitor Details */}
       <div className="flex-1 flex flex-col min-h-screen">
