@@ -38,6 +38,32 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
   return session ? <Navigate to="/dashboard" replace /> : <>{children}</>;
 }
 
+const AppRoutes = () => {
+  const [splashDone, setSplashDone] = useState(() => {
+    return sessionStorage.getItem("splashShown") === "true";
+  });
+
+  const handleSplashDone = () => {
+    sessionStorage.setItem("splashShown", "true");
+    setSplashDone(true);
+  };
+
+  if (!splashDone) {
+    return <Splash onDone={handleSplashDone} />;
+  }
+
+  return (
+    <Routes>
+      <Route path="/" element={<Navigate to="/login" replace />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/verify" element={<VerifyOtp />} />
+      <Route path="/admin" element={<Admin />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  );
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -45,14 +71,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
-          <Routes>
-            <Route path="/" element={<Splash />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/verify" element={<VerifyOtp />} />
-            <Route path="/admin" element={<Admin />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <AppRoutes />
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
