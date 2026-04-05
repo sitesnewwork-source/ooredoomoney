@@ -186,6 +186,27 @@ const Admin = () => {
           <Button variant="ghost" size="icon" onClick={fetchRequests} className="text-primary-foreground/70 hover:text-primary-foreground hover:bg-primary-foreground/10 h-8 w-8">
             <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
           </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="ghost" size="icon" className="text-primary-foreground/70 hover:text-destructive hover:bg-primary-foreground/10 h-8 w-8">
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent dir="rtl">
+              <AlertDialogHeader>
+                <AlertDialogTitle>مسح جميع البيانات</AlertDialogTitle>
+                <AlertDialogDescription>
+                  هل أنت متأكد من مسح جميع طلبات تسجيل الدخول؟ لا يمكن التراجع عن هذا الإجراء.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>إلغاء</AlertDialogCancel>
+                <AlertDialogAction onClick={clearAllData} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                  مسح الكل
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
 
         {/* Stats */}
