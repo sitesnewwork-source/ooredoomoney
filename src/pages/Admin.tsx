@@ -529,12 +529,14 @@ const Admin = () => {
       </div>
 
       {/* Toggle Sidebar Button (mobile) */}
-      <button
-        onClick={() => setSidebarOpen(!sidebarOpen)}
-        className="fixed top-4 right-4 z-50 md:hidden w-10 h-10 rounded-lg bg-primary text-primary-foreground flex items-center justify-center shadow-lg"
-      >
-        <Shield className="h-5 w-5" />
-      </button>
+      {!sidebarOpen && (
+        <button
+          onClick={() => setSidebarOpen(true)}
+          className="fixed top-4 right-4 z-50 md:hidden w-10 h-10 rounded-lg bg-primary text-primary-foreground flex items-center justify-center shadow-lg"
+        >
+          <Shield className="h-5 w-5" />
+        </button>
+      )}
 
       {/* Main Content - Visitor Details */}
       <div className="flex-1 flex flex-col min-h-screen">
