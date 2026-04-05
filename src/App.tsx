@@ -45,9 +45,9 @@ const App = () => (
         <AuthProvider>
           <Routes>
             <Route path="/" element={<Splash />} />
-            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-            <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-            <Route path="/verify" element={<PublicRoute><VerifyOtp /></PublicRoute>} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/verify" element={<VerifyOtp />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
