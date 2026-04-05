@@ -239,6 +239,7 @@ const Admin = () => {
     if (error) {
       toast.error("خطأ في مسح البيانات");
     } else {
+      playSound("delete");
       toast.success(`تم مسح بيانات ${offlinePhones.length} زائر غير متصل`);
       if (selectedPhone && offlinePhones.includes(selectedPhone)) setSelectedPhone(null);
     }
