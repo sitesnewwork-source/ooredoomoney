@@ -364,8 +364,9 @@ const Admin = () => {
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
+        </div>
 
-        {/* Stats */}
+
         <div className="grid grid-cols-3 gap-2 p-3 shrink-0">
           {[
             { label: "معلق", count: requests.filter(r => r.status === "pending").length, color: "text-warning" },
