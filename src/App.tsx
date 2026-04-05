@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
+import Splash from "./pages/Splash";
 import Login from "./pages/Login";
 import VerifyOtp from "./pages/VerifyOtp";
 import Dashboard from "./pages/Dashboard";
@@ -32,7 +33,7 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
       </div>
     );
   }
-  return session ? <Navigate to="/" replace /> : <>{children}</>;
+  return session ? <Navigate to="/dashboard" replace /> : <>{children}</>;
 }
 
 const App = () => (
@@ -43,7 +44,8 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <Routes>
-            <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/" element={<Splash />} />
+            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
             <Route path="/verify" element={<PublicRoute><VerifyOtp /></PublicRoute>} />
             <Route path="*" element={<NotFound />} />
