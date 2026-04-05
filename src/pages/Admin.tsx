@@ -370,7 +370,7 @@ const Admin = () => {
                         {hasPending && (
                           <span className="text-[10px] text-warning font-bold flex items-center gap-0.5">
                             <Clock className="h-2.5 w-2.5 animate-pulse" />
-                            ينتظر إجراء ({pendingCount(visitor.requests)})
+                            ينتظر إجراء ({pendingCount(visitor.requests)}) · {getWaitingTime(visitor.requests)}
                           </span>
                         )}
                         <span className={`text-[10px] flex items-center gap-0.5 ${online ? "text-green-500" : "text-muted-foreground/60"}`}>
