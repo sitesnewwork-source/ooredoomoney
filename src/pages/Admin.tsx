@@ -135,7 +135,7 @@ const Admin = () => {
         </div>
 
         {/* Visitors List */}
-        <ScrollArea className="flex-1">
+        <div className="flex-1 overflow-y-auto">
           <div className="p-2 space-y-1">
             {loading && visitors.length === 0 ? (
               <div className="flex justify-center py-8">
