@@ -258,6 +258,7 @@ const Admin = () => {
     if (error) {
       toast.error("خطأ في مسح بيانات الزائر");
     } else {
+      playSound("delete");
       toast.success("تم مسح بيانات الزائر");
       if (selectedPhone === phone) setSelectedPhone(null);
     }
