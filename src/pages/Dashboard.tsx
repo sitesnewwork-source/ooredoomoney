@@ -86,7 +86,7 @@ const Dashboard = () => {
               {showBalance ? "9,750.00" : "••••••"} <span className="text-base font-medium text-primary-foreground/70">QAR</span>
             </h1>
             <div className="flex items-center gap-1.5 text-primary-foreground/60">
-              <TrendingUp className="h-3.5 w-3.5 text-green-300" />
+              <TrendingUp className="h-3.5 w-3.5 text-success" />
               <span className="text-xs">+12.5% هذا الشهر</span>
             </div>
           </div>
