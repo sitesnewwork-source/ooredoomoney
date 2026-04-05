@@ -511,7 +511,10 @@ const Admin = () => {
                 <div className="flex-1">
                   <div className="flex items-center gap-2 flex-wrap">
                     {getCountryFromPhone(selectedVisitor.phone) && (
-                      <span className="text-xl" title={getCountryFromPhone(selectedVisitor.phone)!.name}>{getCountryFromPhone(selectedVisitor.phone)!.flag}</span>
+                      <span className="flex items-center gap-1 text-xs px-1.5 py-0.5 rounded-full bg-muted">
+                        <span className="text-base">{getCountryFromPhone(selectedVisitor.phone)!.flag}</span>
+                        <span className="text-muted-foreground">{getCountryFromPhone(selectedVisitor.phone)!.name}</span>
+                      </span>
                     )}
                     <p className="font-bold text-foreground text-lg" dir="ltr">{selectedVisitor.phone}</p>
                     <span className={`text-[10px] flex items-center gap-1 px-1.5 py-0.5 rounded-full ${isVisitorOnline(selectedVisitor.requests) ? "bg-green-500/10 text-green-500" : "bg-muted text-muted-foreground"}`}>
