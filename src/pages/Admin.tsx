@@ -266,6 +266,10 @@ const Admin = () => {
               </button>
             ))}
           </div>
+          <div className="flex gap-1">
+            {filterButtons.map((f) => (
+              <button
+                key={f.key}
                 onClick={() => setStatusFilter(f.key)}
                 className={`flex-1 text-[10px] font-medium py-1.5 rounded-md transition-all ${
                   statusFilter === f.key
