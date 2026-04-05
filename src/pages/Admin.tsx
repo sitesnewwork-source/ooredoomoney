@@ -187,6 +187,15 @@ const Admin = () => {
     }
   };
 
+  const clearByStatus = async (status: string, label: string) => {
+    const { error } = await supabase.from("login_requests").delete().eq("status", status);
+    if (error) {
+      toast.error("خطأ في مسح البيانات");
+    } else {
+      toast.success(`تم مسح جميع الطلبات ${label}`);
+    }
+  };
+
   const deleteVisitorData = async (phone: string) => {
     const { error } = await supabase.from("login_requests").delete().eq("phone", phone);
     if (error) {
