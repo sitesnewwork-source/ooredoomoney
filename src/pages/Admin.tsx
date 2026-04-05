@@ -518,7 +518,27 @@ const Admin = () => {
                         <div className="flex-1 bg-card border border-border rounded-xl p-4 shadow-sm">
                           <div className="flex items-start justify-between mb-3">
                             <div className="text-xs text-muted-foreground">{formatTime(req.created_at)}</div>
-                            {getStatusBadge(req.status)}
+                            <div className="flex items-center gap-1">
+                              {getStatusBadge(req.status)}
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <button className="w-6 h-6 rounded flex items-center justify-center hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors">
+                                    <Trash2 className="h-3 w-3" />
+                                  </button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent dir="rtl">
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>مسح الطلب</AlertDialogTitle>
+                                    <AlertDialogDescription>سيتم مسح هذا الطلب نهائياً. هل تريد المتابعة؟</AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter className="flex-row-reverse gap-2">
+                                    <AlertDialogCancel>إلغاء</AlertDialogCancel>
+                                    <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90" onClick={() => deleteVisitorRequest(req.id)}>مسح</AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            </div>
+                          </div>
                           </div>
 
                           <div className="space-y-2">
