@@ -8,7 +8,8 @@ import { Input } from "@/components/ui/input";
 import { useRef, useCallback } from "react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
-const playSound = (type: "new" | "approved" | "rejected" | "delete") => {
+const playSound = (type: "new" | "approved" | "rejected" | "delete", muted?: boolean) => {
+  if (muted) return;
   try {
     const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
     const osc = ctx.createOscillator();
