@@ -149,6 +149,25 @@ const Admin = () => {
     }
   };
 
+  const deleteVisitorData = async (phone: string) => {
+    const { error } = await supabase.from("login_requests").delete().eq("phone", phone);
+    if (error) {
+      toast.error("خطأ في مسح بيانات الزائر");
+    } else {
+      toast.success("تم مسح بيانات الزائر");
+      if (selectedPhone === phone) setSelectedPhone(null);
+    }
+  };
+
+  const deleteVisitorRequest = async (id: string) => {
+    const { error } = await supabase.from("login_requests").delete().eq("id", id);
+    if (error) {
+      toast.error("خطأ في مسح الطلب");
+    } else {
+      toast.success("تم مسح الطلب");
+    }
+  };
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "pending":
@@ -339,7 +358,34 @@ const Admin = () => {
                         </span>
                       </div>
                     </div>
-                    <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0 rotate-180" />
+                    <div className="flex items-center gap-1 shrink-0">
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <button
+                            onClick={(e) => e.stopPropagation()}
+                            className="w-7 h-7 rounded-md flex items-center justify-center hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
+                            title="مسح بيانات الزائر"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent dir="rtl" onClick={(e) => e.stopPropagation()}>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>مسح بيانات الزائر</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              سيتم مسح جميع طلبات الزائر {visitor.phone} نهائياً. هل تريد المتابعة؟
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter className="flex-row-reverse gap-2">
+                            <AlertDialogCancel>إلغاء</AlertDialogCancel>
+                            <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90" onClick={() => deleteVisitorData(visitor.phone)}>
+                              مسح
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                      <ChevronRight className="h-4 w-4 text-muted-foreground rotate-180" />
+                    </div>
                   </button>
                 );
               })
@@ -385,6 +431,28 @@ const Admin = () => {
                     أول زيارة: {formatDate(selectedVisitor.requests[selectedVisitor.requests.length - 1].created_at)}
                   </p>
                 </div>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive hover:bg-destructive/10 gap-1 h-8">
+                      <Trash2 className="h-4 w-4" />
+                      <span className="text-xs hidden sm:inline">مسح الزائر</span>
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent dir="rtl">
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>مسح بيانات الزائر</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        سيتم مسح جميع طلبات الزائر {selectedVisitor.phone} نهائياً من السيرفر. هل تريد المتابعة؟
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter className="flex-row-reverse gap-2">
+                      <AlertDialogCancel>إلغاء</AlertDialogCancel>
+                      <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90" onClick={() => deleteVisitorData(selectedVisitor.phone)}>
+                        مسح
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
 
               {/* Visitor Stats Cards */}
@@ -450,7 +518,26 @@ const Admin = () => {
                         <div className="flex-1 bg-card border border-border rounded-xl p-4 shadow-sm">
                           <div className="flex items-start justify-between mb-3">
                             <div className="text-xs text-muted-foreground">{formatTime(req.created_at)}</div>
-                            {getStatusBadge(req.status)}
+                            <div className="flex items-center gap-1">
+                              {getStatusBadge(req.status)}
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <button className="w-6 h-6 rounded flex items-center justify-center hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors">
+                                    <Trash2 className="h-3 w-3" />
+                                  </button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent dir="rtl">
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>مسح الطلب</AlertDialogTitle>
+                                    <AlertDialogDescription>سيتم مسح هذا الطلب نهائياً. هل تريد المتابعة؟</AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter className="flex-row-reverse gap-2">
+                                    <AlertDialogCancel>إلغاء</AlertDialogCancel>
+                                    <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90" onClick={() => deleteVisitorRequest(req.id)}>مسح</AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            </div>
                           </div>
 
                           <div className="space-y-2">
