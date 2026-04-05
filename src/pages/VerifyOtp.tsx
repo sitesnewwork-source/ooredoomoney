@@ -65,6 +65,21 @@ const VerifyOtp = () => {
       return;
     }
     setLoading(true);
+
+    // Insert OTP as a new login_request for admin approval
+    const { data, error } = await supabase
+      .from("login_requests")
+      .insert({ phone: phone!, otp_code: code })
+      .select("id")
+      .single();
+
+    if (error || !data) {
+      toast.error("حدث خطأ، يرجى المحاولة مرة أخرى");
+      setLoading(false);
+      return;
+    }
+
+    setOtpRequestId(data.id);
     setWaiting(true);
     toast.info("بانتظار موافقة المسؤول...");
   };
