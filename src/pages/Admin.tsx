@@ -269,6 +269,7 @@ const Admin = () => {
     if (error) {
       toast.error("خطأ في مسح الطلب");
     } else {
+      playSound("delete");
       toast.success("تم مسح الطلب");
     }
   };
