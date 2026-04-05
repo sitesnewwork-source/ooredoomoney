@@ -45,7 +45,7 @@ const Splash = () => {
           <span className="text-ooredoo-red text-5xl font-extrabold tracking-tight" style={{ fontFamily: "'Cairo', sans-serif" }}>
             ooredoo
           </span>
-          <span className="text-ooredoo-red text-5xl font-extrabold">·</span>
+          <span className="text-ooredoo-red text-5xl font-extrabold" style={{ animation: "splash-pulse 1.5s ease-in-out 1.2s infinite" }}>·</span>
         </div>
         <div
           className="flex items-center gap-1 opacity-0"
