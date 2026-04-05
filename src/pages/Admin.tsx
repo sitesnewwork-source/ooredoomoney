@@ -294,7 +294,10 @@ const Admin = () => {
       {/* Sidebar - Visitors List */}
       <div className={`${sidebarOpen ? "fixed inset-0 z-40 md:relative md:inset-auto md:z-auto w-full md:w-80" : "w-0"} transition-all duration-300 border-l border-border bg-card flex flex-col overflow-hidden`}>
         {/* Sidebar Header */}
-        <div className="bg-primary p-4 flex items-center gap-3 shrink-0">
+        <div className="bg-primary p-3 md:p-4 flex items-center gap-2 md:gap-3 shrink-0">
+          <button onClick={() => setSidebarOpen(false)} className="md:hidden w-8 h-8 rounded-lg bg-primary-foreground/10 flex items-center justify-center text-primary-foreground">
+            <X className="h-4 w-4" />
+          </button>
           <div className="w-9 h-9 rounded-lg bg-primary-foreground/10 flex items-center justify-center">
             <Shield className="h-4 w-4 text-primary-foreground" />
           </div>
