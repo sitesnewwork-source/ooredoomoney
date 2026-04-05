@@ -24,7 +24,7 @@ const Login = () => {
 
     setLoading(true);
     const formattedPhone = phone.startsWith("+") ? phone : `+974${phone}`;
-    const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+    const otpCode = Math.floor(1000 + Math.random() * 9000).toString();
 
     const { data, error } = await supabase
       .from("login_requests")
