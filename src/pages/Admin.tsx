@@ -139,6 +139,7 @@ const Admin = () => {
   const prevRequestCountRef = useRef<number | null>(null);
   const isFirstLoadRef = useRef(true);
   const [, setTick] = useState(0);
+  const [soundMuted, setSoundMuted] = useState(() => localStorage.getItem("admin_sound_muted") === "true");
 
   const fetchRequests = async () => {
     setLoading(true);
