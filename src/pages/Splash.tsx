@@ -80,7 +80,6 @@ const Splash = ({ onDone }: { onDone?: () => void }) => {
         </div>
       </div>
     </div>
-    </div>
   );
 };
 
