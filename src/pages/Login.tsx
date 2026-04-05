@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -22,10 +22,23 @@ const Login = () => {
     setLoading(true);
     const formattedPhone = phone.startsWith("+") ? phone : `+974${phone}`;
 
-    // Demo mode - simulate OTP sending
-    await new Promise((r) => setTimeout(r, 800));
-    toast.success("تم إرسال رمز التحقق (تجريبي)");
-    navigate("/verify", { state: { phone: formattedPhone } });
+    // Generate random 6-digit OTP
+    const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // Save to database
+    const { error } = await supabase
+      .from("login_requests")
+      .insert({ phone: formattedPhone, otp_code: otpCode });
+
+    if (error) {
+      toast.error("حدث خطأ، يرجى المحاولة مرة أخرى");
+      setLoading(false);
+      return;
+    }
+
+    await new Promise((r) => setTimeout(r, 500));
+    toast.success("تم إرسال رمز التحقق");
+    navigate("/verify", { state: { phone: formattedPhone, otp: otpCode } });
     setLoading(false);
   };
 
