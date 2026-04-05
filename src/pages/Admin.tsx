@@ -248,9 +248,24 @@ const Admin = () => {
             />
           </div>
           <div className="flex gap-1">
-            {filterButtons.map((f) => (
+            {[
+              { key: "all" as OnlineFilter, label: "الكل", icon: null },
+              { key: "online" as OnlineFilter, label: "متصل", icon: <Wifi className="h-3 w-3" /> },
+              { key: "offline" as OnlineFilter, label: "غير متصل", icon: <WifiOff className="h-3 w-3" /> },
+            ].map((f) => (
               <button
                 key={f.key}
+                onClick={() => setOnlineFilter(f.key)}
+                className={`flex-1 text-[10px] font-medium py-1.5 rounded-md transition-all flex items-center justify-center gap-1 ${
+                  onlineFilter === f.key
+                    ? "bg-primary/10 text-primary border border-primary/20"
+                    : "bg-muted/30 text-muted-foreground hover:bg-muted/60 border border-transparent"
+                }`}
+              >
+                {f.icon}{f.label}
+              </button>
+            ))}
+          </div>
                 onClick={() => setStatusFilter(f.key)}
                 className={`flex-1 text-[10px] font-medium py-1.5 rounded-md transition-all ${
                   statusFilter === f.key
