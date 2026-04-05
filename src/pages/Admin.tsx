@@ -59,6 +59,7 @@ const Admin = () => {
   const [selectedPhone, setSelectedPhone] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const [onlineFilter, setOnlineFilter] = useState<OnlineFilter>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const prevRequestCountRef = useRef<number | null>(null);
   const isFirstLoadRef = useRef(true);
