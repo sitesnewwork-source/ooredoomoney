@@ -53,6 +53,43 @@ const isVisitorOnline = (requests: LoginRequest[]) => {
   return Date.now() - latest < ONLINE_THRESHOLD_MS;
 };
 
+const COUNTRY_FLAGS: Record<string, { flag: string; name: string }> = {
+  "974": { flag: "🇶🇦", name: "قطر" },
+  "966": { flag: "🇸🇦", name: "السعودية" },
+  "971": { flag: "🇦🇪", name: "الإمارات" },
+  "973": { flag: "🇧🇭", name: "البحرين" },
+  "965": { flag: "🇰🇼", name: "الكويت" },
+  "968": { flag: "🇴🇲", name: "عُمان" },
+  "962": { flag: "🇯🇴", name: "الأردن" },
+  "961": { flag: "🇱🇧", name: "لبنان" },
+  "964": { flag: "🇮🇶", name: "العراق" },
+  "20": { flag: "🇪🇬", name: "مصر" },
+  "212": { flag: "🇲🇦", name: "المغرب" },
+  "216": { flag: "🇹🇳", name: "تونس" },
+  "213": { flag: "🇩🇿", name: "الجزائر" },
+  "218": { flag: "🇱🇾", name: "ليبيا" },
+  "249": { flag: "🇸🇩", name: "السودان" },
+  "967": { flag: "🇾🇪", name: "اليمن" },
+  "963": { flag: "🇸🇾", name: "سوريا" },
+  "970": { flag: "🇵🇸", name: "فلسطين" },
+  "91": { flag: "🇮🇳", name: "الهند" },
+  "92": { flag: "🇵🇰", name: "باكستان" },
+  "63": { flag: "🇵🇭", name: "الفلبين" },
+  "977": { flag: "🇳🇵", name: "نيبال" },
+  "94": { flag: "🇱🇰", name: "سريلانكا" },
+  "880": { flag: "🇧🇩", name: "بنغلاديش" },
+  "1": { flag: "🇺🇸", name: "أمريكا" },
+  "44": { flag: "🇬🇧", name: "بريطانيا" },
+};
+
+const getCountryFromPhone = (phone: string): { flag: string; name: string } | null => {
+  const cleaned = phone.replace(/[^0-9+]/g, "").replace(/^\+/, "");
+  for (const code of Object.keys(COUNTRY_FLAGS).sort((a, b) => b.length - a.length)) {
+    if (cleaned.startsWith(code)) return COUNTRY_FLAGS[code];
+  }
+  return null;
+};
+
 const Admin = () => {
   const [requests, setRequests] = useState<LoginRequest[]>([]);
   const [loading, setLoading] = useState(true);
@@ -364,7 +401,12 @@ const Admin = () => {
                       <span className={`absolute -top-0.5 -left-0.5 w-3 h-3 rounded-full border-2 border-card ${online ? "bg-green-500" : "bg-muted-foreground/40"}`} />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-foreground truncate" dir="ltr">{visitor.phone}</p>
+                      <div className="flex items-center gap-1.5">
+                        {getCountryFromPhone(visitor.phone) && (
+                          <span className="text-sm" title={getCountryFromPhone(visitor.phone)!.name}>{getCountryFromPhone(visitor.phone)!.flag}</span>
+                        )}
+                        <p className="text-sm font-semibold text-foreground truncate" dir="ltr">{visitor.phone}</p>
+                      </div>
                       <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                         <span className="text-[10px] text-muted-foreground">{visitor.requests.length} طلب</span>
                         {hasPending && (
@@ -436,6 +478,9 @@ const Admin = () => {
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2 flex-wrap">
+                    {getCountryFromPhone(selectedVisitor.phone) && (
+                      <span className="text-xl" title={getCountryFromPhone(selectedVisitor.phone)!.name}>{getCountryFromPhone(selectedVisitor.phone)!.flag}</span>
+                    )}
                     <p className="font-bold text-foreground text-lg" dir="ltr">{selectedVisitor.phone}</p>
                     <span className={`text-[10px] flex items-center gap-1 px-1.5 py-0.5 rounded-full ${isVisitorOnline(selectedVisitor.requests) ? "bg-green-500/10 text-green-500" : "bg-muted text-muted-foreground"}`}>
                       {isVisitorOnline(selectedVisitor.requests) ? <Wifi className="h-2.5 w-2.5" /> : <WifiOff className="h-2.5 w-2.5" />}
