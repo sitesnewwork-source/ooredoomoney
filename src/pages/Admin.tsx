@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Shield, Check, X, RefreshCw, Clock, Phone, KeyRound, User, ChevronRight, Filter, Search, Calendar, Hash, Trash2 } from "lucide-react";
+import { Shield, Check, X, RefreshCw, Clock, Phone, KeyRound, User, ChevronRight, Filter, Search, Calendar, Hash, Trash2, Wifi, WifiOff } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useRef, useCallback } from "react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
@@ -43,6 +43,15 @@ interface Visitor {
 }
 
 type StatusFilter = "all" | "pending" | "approved" | "rejected";
+type OnlineFilter = "all" | "online" | "offline";
+
+const ONLINE_THRESHOLD_MS = 5 * 60 * 1000; // 5 minutes
+
+const isVisitorOnline = (requests: LoginRequest[]) => {
+  if (requests.length === 0) return false;
+  const latest = new Date(requests[0].created_at).getTime();
+  return Date.now() - latest < ONLINE_THRESHOLD_MS;
+};
 
 const Admin = () => {
   const [requests, setRequests] = useState<LoginRequest[]>([]);
@@ -50,6 +59,7 @@ const Admin = () => {
   const [selectedPhone, setSelectedPhone] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const [onlineFilter, setOnlineFilter] = useState<OnlineFilter>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const prevRequestCountRef = useRef<number | null>(null);
   const isFirstLoadRef = useRef(true);
@@ -105,7 +115,9 @@ const Admin = () => {
   const visitors = allVisitors.filter((v) => {
     const matchesSearch = searchQuery === "" || v.phone.includes(searchQuery);
     const matchesStatus = statusFilter === "all" || v.requests.some(r => r.status === statusFilter);
-    return matchesSearch && matchesStatus;
+    const online = isVisitorOnline(v.requests);
+    const matchesOnline = onlineFilter === "all" || (onlineFilter === "online" ? online : !online);
+    return matchesSearch && matchesStatus && matchesOnline;
   });
 
   const selectedVisitor = allVisitors.find((v) => v.phone === selectedPhone) || null;
@@ -236,6 +248,25 @@ const Admin = () => {
             />
           </div>
           <div className="flex gap-1">
+            {[
+              { key: "all" as OnlineFilter, label: "الكل", icon: null },
+              { key: "online" as OnlineFilter, label: "متصل", icon: <Wifi className="h-3 w-3" /> },
+              { key: "offline" as OnlineFilter, label: "غير متصل", icon: <WifiOff className="h-3 w-3" /> },
+            ].map((f) => (
+              <button
+                key={f.key}
+                onClick={() => setOnlineFilter(f.key)}
+                className={`flex-1 text-[10px] font-medium py-1.5 rounded-md transition-all flex items-center justify-center gap-1 ${
+                  onlineFilter === f.key
+                    ? "bg-primary/10 text-primary border border-primary/20"
+                    : "bg-muted/30 text-muted-foreground hover:bg-muted/60 border border-transparent"
+                }`}
+              >
+                {f.icon}{f.label}
+              </button>
+            ))}
+          </div>
+          <div className="flex gap-1">
             {filterButtons.map((f) => (
               <button
                 key={f.key}
@@ -267,6 +298,7 @@ const Admin = () => {
               visitors.map((visitor) => {
                 const hasPending = pendingCount(visitor.requests) > 0;
                 const isSelected = selectedPhone === visitor.phone;
+                const online = isVisitorOnline(visitor.requests);
                 return (
                   <button
                     key={visitor.phone}
@@ -277,10 +309,11 @@ const Admin = () => {
                         : "hover:bg-muted/70 border border-transparent"
                     }`}
                   >
-                    <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 ${
+                    <div className={`relative w-9 h-9 rounded-full flex items-center justify-center shrink-0 ${
                       hasPending ? "bg-warning/10" : "bg-muted"
                     }`}>
                       <User className={`h-4 w-4 ${hasPending ? "text-warning" : "text-muted-foreground"}`} />
+                      <span className={`absolute -top-0.5 -left-0.5 w-3 h-3 rounded-full border-2 border-card ${online ? "bg-green-500" : "bg-muted-foreground/40"}`} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold text-foreground truncate" dir="ltr">{visitor.phone}</p>
@@ -289,6 +322,10 @@ const Admin = () => {
                         {hasPending && (
                           <span className="text-[10px] text-warning font-medium">{pendingCount(visitor.requests)} معلق</span>
                         )}
+                        <span className={`text-[10px] flex items-center gap-0.5 ${online ? "text-green-500" : "text-muted-foreground/60"}`}>
+                          {online ? <Wifi className="h-2.5 w-2.5" /> : <WifiOff className="h-2.5 w-2.5" />}
+                          {online ? "متصل" : "غير متصل"}
+                        </span>
                       </div>
                     </div>
                     <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0 rotate-180" />
@@ -315,11 +352,18 @@ const Admin = () => {
             {/* Visitor Info Box */}
             <div className="bg-card border-b border-border p-4">
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                <div className="relative w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
                   <User className="h-6 w-6 text-primary" />
+                  <span className={`absolute -top-0.5 -left-0.5 w-3.5 h-3.5 rounded-full border-2 border-card ${isVisitorOnline(selectedVisitor.requests) ? "bg-green-500" : "bg-muted-foreground/40"}`} />
                 </div>
                 <div className="flex-1">
-                  <p className="font-bold text-foreground text-lg" dir="ltr">{selectedVisitor.phone}</p>
+                  <div className="flex items-center gap-2">
+                    <p className="font-bold text-foreground text-lg" dir="ltr">{selectedVisitor.phone}</p>
+                    <span className={`text-[10px] flex items-center gap-1 px-1.5 py-0.5 rounded-full ${isVisitorOnline(selectedVisitor.requests) ? "bg-green-500/10 text-green-500" : "bg-muted text-muted-foreground"}`}>
+                      {isVisitorOnline(selectedVisitor.requests) ? <Wifi className="h-2.5 w-2.5" /> : <WifiOff className="h-2.5 w-2.5" />}
+                      {isVisitorOnline(selectedVisitor.requests) ? "متصل" : "غير متصل"}
+                    </span>
+                  </div>
                   <p className="text-xs text-muted-foreground">
                     أول زيارة: {formatDate(selectedVisitor.requests[selectedVisitor.requests.length - 1].created_at)}
                   </p>
