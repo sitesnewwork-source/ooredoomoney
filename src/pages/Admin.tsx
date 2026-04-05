@@ -317,9 +317,24 @@ const Admin = () => {
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-destructive gap-1 h-7 text-[10px]">
+                <WifiOff className="h-3 w-3" /> مسح غير المتصلين
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent dir="rtl">
+              <AlertDialogHeader>
+                <AlertDialogTitle>مسح الزوار غير المتصلين</AlertDialogTitle>
+                <AlertDialogDescription>سيتم مسح جميع بيانات الزوار غير المتصلين نهائياً. هل تريد المتابعة؟</AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter className="flex-row-reverse gap-2">
+                <AlertDialogCancel>إلغاء</AlertDialogCancel>
+                <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90" onClick={clearOfflineVisitors}>مسح</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
-
-        {/* Stats */}
         <div className="grid grid-cols-3 gap-2 p-3 shrink-0">
           {[
             { label: "معلق", count: requests.filter(r => r.status === "pending").length, color: "text-warning" },
