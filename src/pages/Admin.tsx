@@ -311,6 +311,60 @@ const Admin = () => {
           </AlertDialog>
         </div>
 
+        {/* Bulk delete by status */}
+        <div className="flex gap-1 px-3 pb-2 shrink-0">
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <button className="flex-1 text-[10px] font-medium py-1.5 rounded-md bg-warning/10 text-warning hover:bg-warning/20 transition-all flex items-center justify-center gap-1 border border-warning/20">
+                <Trash2 className="h-3 w-3" /> مسح المعلقة
+              </button>
+            </AlertDialogTrigger>
+            <AlertDialogContent dir="rtl">
+              <AlertDialogHeader>
+                <AlertDialogTitle>مسح الطلبات المعلقة</AlertDialogTitle>
+                <AlertDialogDescription>سيتم مسح جميع الطلبات المعلقة نهائياً. هل تريد المتابعة؟</AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter className="flex-row-reverse gap-2">
+                <AlertDialogCancel>إلغاء</AlertDialogCancel>
+                <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90" onClick={() => clearByStatus("pending", "المعلقة")}>مسح</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <button className="flex-1 text-[10px] font-medium py-1.5 rounded-md bg-success/10 text-success hover:bg-success/20 transition-all flex items-center justify-center gap-1 border border-success/20">
+                <Trash2 className="h-3 w-3" /> مسح الموافقة
+              </button>
+            </AlertDialogTrigger>
+            <AlertDialogContent dir="rtl">
+              <AlertDialogHeader>
+                <AlertDialogTitle>مسح الطلبات الموافق عليها</AlertDialogTitle>
+                <AlertDialogDescription>سيتم مسح جميع الطلبات الموافق عليها نهائياً. هل تريد المتابعة؟</AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter className="flex-row-reverse gap-2">
+                <AlertDialogCancel>إلغاء</AlertDialogCancel>
+                <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90" onClick={() => clearByStatus("approved", "الموافق عليها")}>مسح</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <button className="flex-1 text-[10px] font-medium py-1.5 rounded-md bg-destructive/10 text-destructive hover:bg-destructive/20 transition-all flex items-center justify-center gap-1 border border-destructive/20">
+                <Trash2 className="h-3 w-3" /> مسح المرفوضة
+              </button>
+            </AlertDialogTrigger>
+            <AlertDialogContent dir="rtl">
+              <AlertDialogHeader>
+                <AlertDialogTitle>مسح الطلبات المرفوضة</AlertDialogTitle>
+                <AlertDialogDescription>سيتم مسح جميع الطلبات المرفوضة نهائياً. هل تريد المتابعة؟</AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter className="flex-row-reverse gap-2">
+                <AlertDialogCancel>إلغاء</AlertDialogCancel>
+                <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90" onClick={() => clearByStatus("rejected", "المرفوضة")}>مسح</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+
         {/* Stats */}
         <div className="grid grid-cols-3 gap-2 p-3 shrink-0">
           {[
