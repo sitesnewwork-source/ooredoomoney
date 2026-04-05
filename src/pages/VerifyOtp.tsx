@@ -56,6 +56,7 @@ const VerifyOtp = () => {
     inputRefs.current[Math.min(pasted.length, 5)]?.focus();
   };
 
+  const [otpRequestId, setOtpRequestId] = useState<string | null>(null);
   const [waiting, setWaiting] = useState(false);
 
   const handleVerify = async () => {
