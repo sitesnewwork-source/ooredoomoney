@@ -292,7 +292,7 @@ const Admin = () => {
   return (
     <div className="min-h-screen bg-background flex" dir="rtl">
       {/* Sidebar - Visitors List */}
-      <div className={`${sidebarOpen ? "fixed inset-0 z-40 md:relative md:inset-auto md:z-auto w-full md:w-80" : "w-0"} transition-all duration-300 border-l border-border bg-card flex flex-col overflow-hidden`}>
+      <div className={`${sidebarOpen ? "fixed inset-0 z-40 md:relative md:inset-auto md:z-auto w-full md:w-80 animate-slide-in-right md:animate-none" : "w-0 md:w-0"} transition-all duration-300 border-l border-border bg-card flex flex-col overflow-hidden`}>
         {/* Sidebar Header */}
         <div className="bg-primary p-3 md:p-4 flex items-center gap-2 md:gap-3 shrink-0">
           <button onClick={() => setSidebarOpen(false)} className="md:hidden w-8 h-8 rounded-lg bg-primary-foreground/10 flex items-center justify-center text-primary-foreground">
@@ -535,7 +535,7 @@ const Admin = () => {
       {!sidebarOpen && (
         <button
           onClick={() => setSidebarOpen(true)}
-          className="fixed top-4 right-4 z-50 md:hidden w-10 h-10 rounded-lg bg-primary text-primary-foreground flex items-center justify-center shadow-lg"
+          className="fixed top-4 right-4 z-50 md:hidden w-10 h-10 rounded-lg bg-primary text-primary-foreground flex items-center justify-center shadow-lg animate-scale-in"
         >
           <Shield className="h-5 w-5" />
         </button>
