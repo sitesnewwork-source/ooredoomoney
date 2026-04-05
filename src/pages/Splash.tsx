@@ -40,6 +40,21 @@ const Splash = ({ onDone }: { onDone?: () => void }) => {
         <div className="absolute bottom-0 left-0 w-full h-1/4 bg-gradient-to-t from-black/10 to-transparent" />
       </div>
 
+      {/* Skip button */}
+      <button
+        onClick={() => {
+          setFadeOut(true);
+          setTimeout(() => {
+            if (onDone) onDone();
+            else navigate("/login", { replace: true });
+          }, 400);
+        }}
+        className="absolute top-6 left-6 z-20 text-primary-foreground/60 hover:text-primary-foreground/90 text-sm font-medium transition-colors px-3 py-1.5 rounded-full border border-primary-foreground/10 hover:border-primary-foreground/20 backdrop-blur-sm"
+        style={{ fontFamily: "'Cairo', sans-serif" }}
+      >
+        تخطي
+      </button>
+
       {/* Logo centered */}
       <div className="relative z-10 flex flex-col items-center gap-2">
         <div
@@ -64,6 +79,7 @@ const Splash = ({ onDone }: { onDone?: () => void }) => {
           <span className="text-primary-foreground text-3xl font-bold tracking-wide">ney</span>
         </div>
       </div>
+    </div>
     </div>
   );
 };
