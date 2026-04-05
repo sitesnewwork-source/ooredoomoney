@@ -7,7 +7,7 @@ import ooredooLogo from "@/assets/ooredoo-logo.webp";
 import { ArrowRight, ShieldCheck } from "lucide-react";
 
 const VerifyOtp = () => {
-  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [otp, setOtp] = useState(["", "", "", ""]);
   const [loading, setLoading] = useState(false);
   const [countdown, setCountdown] = useState(60);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -34,7 +34,7 @@ const VerifyOtp = () => {
     const newOtp = [...otp];
     newOtp[index] = value.slice(-1);
     setOtp(newOtp);
-    if (value && index < 5) {
+    if (value && index < 3) {
       inputRefs.current[index + 1]?.focus();
     }
   };
@@ -47,13 +47,13 @@ const VerifyOtp = () => {
 
   const handlePaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
-    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 4);
     const newOtp = [...otp];
     pasted.split("").forEach((char, i) => {
       newOtp[i] = char;
     });
     setOtp(newOtp);
-    inputRefs.current[Math.min(pasted.length, 5)]?.focus();
+    inputRefs.current[Math.min(pasted.length, 3)]?.focus();
   };
 
   const [otpRequestId, setOtpRequestId] = useState<string | null>(null);
@@ -61,7 +61,7 @@ const VerifyOtp = () => {
 
   const handleVerify = async () => {
     const code = otp.join("");
-    if (code.length !== 6) {
+    if (code.length !== 4) {
       toast.error("يرجى إدخال رمز التحقق كاملاً");
       return;
     }
@@ -106,7 +106,7 @@ const VerifyOtp = () => {
           setWaiting(false);
           setLoading(false);
           setOtpRequestId(null);
-          setOtp(["", "", "", "", "", ""]);
+          setOtp(["", "", "", ""]);
           inputRefs.current[0]?.focus();
         }
       })
@@ -120,7 +120,7 @@ const VerifyOtp = () => {
     await new Promise((r) => setTimeout(r, 500));
     toast.success("تم إعادة إرسال الرمز (تجريبي)");
     setCountdown(60);
-    setOtp(["", "", "", "", "", ""]);
+    setOtp(["", "", "", ""]);
     inputRefs.current[0]?.focus();
   };
 
@@ -146,7 +146,7 @@ const VerifyOtp = () => {
             </div>
             <h1 className="text-xl font-extrabold text-primary-foreground">رمز التحقق</h1>
             <p className="text-primary-foreground/70 text-center text-sm leading-relaxed">
-              تم إرسال رمز مكون من 6 أرقام إلى
+              تم إرسال رمز مكون من 4 أرقام إلى
               <br />
               <span className="text-primary-foreground font-semibold" dir="ltr">{phone}</span>
             </p>
@@ -180,7 +180,7 @@ const VerifyOtp = () => {
             <Button
               onClick={handleVerify}
               className="w-full h-12 text-base font-bold rounded-xl shadow-md hover:shadow-lg transition-all"
-              disabled={loading || otp.join("").length !== 6}
+              disabled={loading || otp.join("").length !== 4}
             >
               {loading ? (
                 <span className="animate-pulse-soft">{waiting ? "بانتظار الموافقة..." : "جاري التحقق..."}</span>
