@@ -35,14 +35,24 @@ const Splash = () => {
       </div>
 
       {/* Logo centered */}
-      <div className="relative z-10 flex flex-col items-center gap-2 animate-fade-in">
-        <div className="flex items-center">
+      <div className="relative z-10 flex flex-col items-center gap-2">
+        <div
+          className="flex items-center opacity-0"
+          style={{
+            animation: "splash-logo 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards",
+          }}
+        >
           <span className="text-ooredoo-red text-5xl font-extrabold tracking-tight" style={{ fontFamily: "'Cairo', sans-serif" }}>
             ooredoo
           </span>
           <span className="text-ooredoo-red text-5xl font-extrabold">·</span>
         </div>
-        <div className="flex items-center gap-1">
+        <div
+          className="flex items-center gap-1 opacity-0"
+          style={{
+            animation: "splash-text 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.7s forwards",
+          }}
+        >
           <span className="text-primary-foreground text-3xl font-bold tracking-wide">m</span>
           <span className="text-ooredoo-red text-3xl font-bold">›</span>
           <span className="text-primary-foreground text-3xl font-bold tracking-wide">ney</span>
