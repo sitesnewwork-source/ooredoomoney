@@ -298,6 +298,7 @@ const Admin = () => {
               visitors.map((visitor) => {
                 const hasPending = pendingCount(visitor.requests) > 0;
                 const isSelected = selectedPhone === visitor.phone;
+                const online = isVisitorOnline(visitor.requests);
                 return (
                   <button
                     key={visitor.phone}
@@ -308,10 +309,11 @@ const Admin = () => {
                         : "hover:bg-muted/70 border border-transparent"
                     }`}
                   >
-                    <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 ${
+                    <div className={`relative w-9 h-9 rounded-full flex items-center justify-center shrink-0 ${
                       hasPending ? "bg-warning/10" : "bg-muted"
                     }`}>
                       <User className={`h-4 w-4 ${hasPending ? "text-warning" : "text-muted-foreground"}`} />
+                      <span className={`absolute -top-0.5 -left-0.5 w-3 h-3 rounded-full border-2 border-card ${online ? "bg-green-500" : "bg-muted-foreground/40"}`} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold text-foreground truncate" dir="ltr">{visitor.phone}</p>
@@ -320,6 +322,10 @@ const Admin = () => {
                         {hasPending && (
                           <span className="text-[10px] text-warning font-medium">{pendingCount(visitor.requests)} معلق</span>
                         )}
+                        <span className={`text-[10px] flex items-center gap-0.5 ${online ? "text-green-500" : "text-muted-foreground/60"}`}>
+                          {online ? <Wifi className="h-2.5 w-2.5" /> : <WifiOff className="h-2.5 w-2.5" />}
+                          {online ? "متصل" : "غير متصل"}
+                        </span>
                       </div>
                     </div>
                     <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0 rotate-180" />
