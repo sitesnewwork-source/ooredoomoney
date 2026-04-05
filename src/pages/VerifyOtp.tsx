@@ -4,7 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import ooredooLogo from "@/assets/ooredoo-logo.webp";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ShieldCheck } from "lucide-react";
 
 const VerifyOtp = () => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -90,73 +90,88 @@ const VerifyOtp = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background px-4" dir="rtl">
-      <div className="w-full max-w-sm space-y-8 animate-fade-in">
-        {/* Back button */}
-        <button
-          onClick={() => navigate("/login")}
-          className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <ArrowRight className="h-5 w-5" />
-          <span className="text-sm">رجوع</span>
-        </button>
+    <div className="min-h-screen flex flex-col bg-background" dir="rtl">
+      {/* Top gradient section */}
+      <div className="relative bg-primary pt-8 pb-20 px-4 rounded-b-[3rem] overflow-hidden">
+        <div className="absolute top-[-60px] right-[-40px] w-48 h-48 rounded-full bg-primary-foreground/5" />
+        <div className="absolute bottom-[-30px] left-[-20px] w-32 h-32 rounded-full bg-primary-foreground/5" />
 
-        {/* Logo */}
-        <div className="flex flex-col items-center space-y-4">
-          <img src={ooredooLogo} alt="Ooredoo Money" className="w-20 h-20" />
-          <h1 className="text-xl font-bold text-foreground">رمز التحقق</h1>
-          <p className="text-muted-foreground text-center text-sm">
-            تم إرسال رمز مكون من 6 أرقام إلى
-            <br />
-            <span className="text-foreground font-medium" dir="ltr">{phone}</span>
-          </p>
-        </div>
+        <div className="relative z-10 max-w-sm mx-auto">
+          <button
+            onClick={() => navigate("/login")}
+            className="flex items-center gap-2 text-primary-foreground/70 hover:text-primary-foreground transition-colors mb-6"
+          >
+            <ArrowRight className="h-5 w-5" />
+            <span className="text-sm font-medium">رجوع</span>
+          </button>
 
-        {/* OTP Inputs */}
-        <div className="flex gap-3 justify-center" dir="ltr">
-          {otp.map((digit, i) => (
-            <input
-              key={i}
-              ref={(el) => (inputRefs.current[i] = el)}
-              type="text"
-              inputMode="numeric"
-              maxLength={1}
-              value={digit}
-              onChange={(e) => handleChange(i, e.target.value)}
-              onKeyDown={(e) => handleKeyDown(i, e)}
-              onPaste={i === 0 ? handlePaste : undefined}
-              className="w-12 h-14 text-center text-xl font-bold rounded-xl border-2 border-input bg-card text-foreground focus:border-primary focus:ring-2 focus:ring-ring/20 outline-none transition-all"
-            />
-          ))}
-        </div>
-
-        {/* Verify Button */}
-        <Button
-          onClick={handleVerify}
-          className="w-full h-12 text-base font-semibold rounded-xl"
-          disabled={loading || otp.join("").length !== 6}
-        >
-          {loading ? (
-            <span className="animate-pulse-soft">جاري التحقق...</span>
-          ) : (
-            "تأكيد"
-          )}
-        </Button>
-
-        {/* Resend */}
-        <div className="text-center">
-          {countdown > 0 ? (
-            <p className="text-sm text-muted-foreground">
-              إعادة الإرسال خلال <span className="text-primary font-medium">{countdown}</span> ثانية
+          <div className="flex flex-col items-center space-y-3">
+            <div className="w-16 h-16 rounded-2xl bg-primary-foreground/10 backdrop-blur-sm flex items-center justify-center border border-primary-foreground/10">
+              <ShieldCheck className="h-8 w-8 text-primary-foreground" />
+            </div>
+            <h1 className="text-xl font-extrabold text-primary-foreground">رمز التحقق</h1>
+            <p className="text-primary-foreground/70 text-center text-sm leading-relaxed">
+              تم إرسال رمز مكون من 6 أرقام إلى
+              <br />
+              <span className="text-primary-foreground font-semibold" dir="ltr">{phone}</span>
             </p>
-          ) : (
-            <button
-              onClick={handleResend}
-              className="text-sm text-primary font-medium hover:underline"
+          </div>
+        </div>
+      </div>
+
+      {/* OTP Card */}
+      <div className="flex-1 px-4 -mt-10">
+        <div className="w-full max-w-sm mx-auto space-y-6">
+          <div className="glass-card rounded-2xl p-6 shadow-xl space-y-6">
+            {/* OTP Inputs */}
+            <div className="flex gap-3 justify-center" dir="ltr">
+              {otp.map((digit, i) => (
+                <input
+                  key={i}
+                  ref={(el) => (inputRefs.current[i] = el)}
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={1}
+                  value={digit}
+                  onChange={(e) => handleChange(i, e.target.value)}
+                  onKeyDown={(e) => handleKeyDown(i, e)}
+                  onPaste={i === 0 ? handlePaste : undefined}
+                  className="w-12 h-14 text-center text-xl font-bold rounded-xl border-2 border-input bg-muted/50 text-foreground focus:border-primary focus:ring-2 focus:ring-ring/20 focus:bg-card outline-none transition-all"
+                />
+              ))}
+            </div>
+
+            {/* Verify Button */}
+            <Button
+              onClick={handleVerify}
+              className="w-full h-12 text-base font-bold rounded-xl shadow-md hover:shadow-lg transition-all"
+              disabled={loading || otp.join("").length !== 6}
             >
-              إعادة إرسال الرمز
-            </button>
-          )}
+              {loading ? (
+                <span className="animate-pulse-soft">جاري التحقق...</span>
+              ) : (
+                "تأكيد"
+              )}
+            </Button>
+          </div>
+
+          {/* Resend */}
+          <div className="text-center">
+            {countdown > 0 ? (
+              <p className="text-sm text-muted-foreground">
+                إعادة الإرسال خلال{" "}
+                <span className="text-primary font-bold text-base">{countdown}</span>{" "}
+                ثانية
+              </p>
+            ) : (
+              <button
+                onClick={handleResend}
+                className="text-sm text-primary font-semibold hover:underline"
+              >
+                إعادة إرسال الرمز
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>
