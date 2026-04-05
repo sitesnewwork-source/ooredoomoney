@@ -129,7 +129,83 @@ const getCountryFromPhone = (phone: string): { flag: string; name: string } | nu
   return null;
 };
 
+const AdminLogin = ({ onLogin }: { onLogin: () => void }) => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("admin-login", {
+        body: { username, password },
+      });
+      if (error || !data?.success) {
+        toast.error(data?.error || "بيانات الدخول غير صحيحة");
+      } else {
+        sessionStorage.setItem("admin_token", data.token);
+        onLogin();
+      }
+    } catch {
+      toast.error("حدث خطأ في الاتصال");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-background p-4" dir="rtl">
+      <div className="w-full max-w-sm glass-card rounded-2xl p-6 shadow-xl space-y-6">
+        <div className="text-center space-y-2">
+          <div className="w-14 h-14 mx-auto rounded-xl bg-primary/10 flex items-center justify-center">
+            <Shield className="h-7 w-7 text-primary" />
+          </div>
+          <h1 className="text-xl font-bold text-foreground">لوحة التحكم</h1>
+          <p className="text-sm text-muted-foreground">أدخل بيانات المسؤول للمتابعة</p>
+        </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <label className="text-sm font-semibold text-foreground">اسم المستخدم</label>
+            <Input
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="اسم المستخدم"
+              className="h-12"
+              dir="ltr"
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-semibold text-foreground">كلمة المرور</label>
+            <Input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="كلمة المرور"
+              className="h-12"
+              dir="ltr"
+            />
+          </div>
+          <Button type="submit" className="w-full h-12 text-base font-bold rounded-xl" disabled={loading || !username || !password}>
+            {loading ? "جاري التحقق..." : "تسجيل الدخول"}
+          </Button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
 const Admin = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(() => !!sessionStorage.getItem("admin_token"));
+
+  if (!isAuthenticated) {
+    return <AdminLogin onLogin={() => setIsAuthenticated(true)} />;
+  }
+
+  return <AdminDashboard onLogout={() => { sessionStorage.removeItem("admin_token"); setIsAuthenticated(false); }} />;
+};
+
+const AdminDashboard = ({ onLogout }: { onLogout: () => void }) => {
   const [requests, setRequests] = useState<LoginRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedPhone, setSelectedPhone] = useState<string | null>(null);
