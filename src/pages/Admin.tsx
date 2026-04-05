@@ -431,6 +431,28 @@ const Admin = () => {
                     أول زيارة: {formatDate(selectedVisitor.requests[selectedVisitor.requests.length - 1].created_at)}
                   </p>
                 </div>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive hover:bg-destructive/10 gap-1 h-8">
+                      <Trash2 className="h-4 w-4" />
+                      <span className="text-xs hidden sm:inline">مسح الزائر</span>
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent dir="rtl">
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>مسح بيانات الزائر</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        سيتم مسح جميع طلبات الزائر {selectedVisitor.phone} نهائياً من السيرفر. هل تريد المتابعة؟
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter className="flex-row-reverse gap-2">
+                      <AlertDialogCancel>إلغاء</AlertDialogCancel>
+                      <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90" onClick={() => deleteVisitorData(selectedVisitor.phone)}>
+                        مسح
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
 
               {/* Visitor Stats Cards */}
