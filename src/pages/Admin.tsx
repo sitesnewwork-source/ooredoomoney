@@ -63,6 +63,7 @@ const Admin = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const prevRequestCountRef = useRef<number | null>(null);
   const isFirstLoadRef = useRef(true);
+  const [, setTick] = useState(0);
 
   const fetchRequests = async () => {
     setLoading(true);
@@ -192,6 +193,26 @@ const Admin = () => {
     return new Date(dateStr).toLocaleDateString("ar-QA", {
       year: "numeric", month: "long", day: "numeric",
     });
+  };
+
+  // Tick every 30s to update time-ago displays
+  useEffect(() => {
+    const interval = setInterval(() => setTick(t => t + 1), 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const getWaitingTime = (reqs: LoginRequest[]) => {
+    const pendingReqs = reqs.filter(r => r.status === "pending");
+    if (pendingReqs.length === 0) return "";
+    const oldest = pendingReqs.reduce((a, b) => new Date(a.created_at) < new Date(b.created_at) ? a : b);
+    const diffMs = Date.now() - new Date(oldest.created_at).getTime();
+    const mins = Math.floor(diffMs / 60000);
+    if (mins < 1) return "الآن";
+    if (mins < 60) return `${mins} د`;
+    const hours = Math.floor(mins / 60);
+    if (hours < 24) return `${hours} س ${mins % 60} د`;
+    const days = Math.floor(hours / 24);
+    return `${days} ي ${hours % 24} س`;
   };
 
   const pendingCount = (reqs: LoginRequest[]) => reqs.filter(r => r.status === "pending").length;
@@ -349,7 +370,7 @@ const Admin = () => {
                         {hasPending && (
                           <span className="text-[10px] text-warning font-bold flex items-center gap-0.5">
                             <Clock className="h-2.5 w-2.5 animate-pulse" />
-                            ينتظر إجراء ({pendingCount(visitor.requests)})
+                            ينتظر إجراء ({pendingCount(visitor.requests)}) · {getWaitingTime(visitor.requests)}
                           </span>
                         )}
                         <span className={`text-[10px] flex items-center gap-0.5 ${online ? "text-green-500" : "text-muted-foreground/60"}`}>
@@ -423,7 +444,7 @@ const Admin = () => {
                     {pendingCount(selectedVisitor.requests) > 0 && (
                       <span className="text-[10px] flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-warning/15 text-warning font-bold animate-pulse">
                         <Clock className="h-2.5 w-2.5" />
-                        ينتظر إجراء
+                        ينتظر إجراء · {getWaitingTime(selectedVisitor.requests)}
                       </span>
                     )}
                   </div>
