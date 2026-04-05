@@ -451,7 +451,7 @@ const Admin = () => {
                 return (
                   <button
                     key={visitor.phone}
-                    onClick={() => setSelectedPhone(visitor.phone)}
+                    onClick={() => { setSelectedPhone(visitor.phone); if (window.innerWidth < 768) setSidebarOpen(false); }}
                     className={`w-full text-right rounded-lg p-3 transition-all flex items-center gap-3 relative overflow-hidden ${
                       hasPending
                         ? isSelected
