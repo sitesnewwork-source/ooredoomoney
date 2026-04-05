@@ -6,8 +6,8 @@ const Splash = () => {
   const [fadeOut, setFadeOut] = useState(false);
 
   useEffect(() => {
-    const fadeTimer = setTimeout(() => setFadeOut(true), 2500);
-    const navTimer = setTimeout(() => navigate("/login", { replace: true }), 3000);
+    const fadeTimer = setTimeout(() => setFadeOut(true), 4500);
+    const navTimer = setTimeout(() => navigate("/login", { replace: true }), 5000);
     return () => {
       clearTimeout(fadeTimer);
       clearTimeout(navTimer);
