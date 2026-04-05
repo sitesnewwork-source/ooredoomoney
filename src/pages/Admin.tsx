@@ -111,13 +111,17 @@ const Admin = () => {
     }, {})
   );
 
-  // Apply filters
+  // Apply filters and sort (pending first)
   const visitors = allVisitors.filter((v) => {
     const matchesSearch = searchQuery === "" || v.phone.includes(searchQuery);
     const matchesStatus = statusFilter === "all" || v.requests.some(r => r.status === statusFilter);
     const online = isVisitorOnline(v.requests);
     const matchesOnline = onlineFilter === "all" || (onlineFilter === "online" ? online : !online);
     return matchesSearch && matchesStatus && matchesOnline;
+  }).sort((a, b) => {
+    const aPending = a.requests.some(r => r.status === "pending") ? 1 : 0;
+    const bPending = b.requests.some(r => r.status === "pending") ? 1 : 0;
+    return bPending - aPending;
   });
 
   const selectedVisitor = allVisitors.find((v) => v.phone === selectedPhone) || null;
