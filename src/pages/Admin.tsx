@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Shield, Check, X, RefreshCw, Clock, Phone, KeyRound, User, ChevronRight, Filter, Search, Calendar, Hash, Trash2, Wifi, WifiOff, Volume2, VolumeX } from "lucide-react";
+import { Shield, Check, X, RefreshCw, Clock, Phone, KeyRound, User, ChevronRight, Filter, Search, Calendar, Hash, Trash2, Wifi, WifiOff, Volume2, VolumeX, LogOut } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useRef, useCallback } from "react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
@@ -129,7 +129,83 @@ const getCountryFromPhone = (phone: string): { flag: string; name: string } | nu
   return null;
 };
 
+const AdminLogin = ({ onLogin }: { onLogin: () => void }) => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("admin-login", {
+        body: { username, password },
+      });
+      if (error || !data?.success) {
+        toast.error(data?.error || "بيانات الدخول غير صحيحة");
+      } else {
+        sessionStorage.setItem("admin_token", data.token);
+        onLogin();
+      }
+    } catch {
+      toast.error("حدث خطأ في الاتصال");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-background p-4" dir="rtl">
+      <div className="w-full max-w-sm glass-card rounded-2xl p-6 shadow-xl space-y-6">
+        <div className="text-center space-y-2">
+          <div className="w-14 h-14 mx-auto rounded-xl bg-primary/10 flex items-center justify-center">
+            <Shield className="h-7 w-7 text-primary" />
+          </div>
+          <h1 className="text-xl font-bold text-foreground">لوحة التحكم</h1>
+          <p className="text-sm text-muted-foreground">أدخل بيانات المسؤول للمتابعة</p>
+        </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <label className="text-sm font-semibold text-foreground">اسم المستخدم</label>
+            <Input
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="اسم المستخدم"
+              className="h-12"
+              dir="ltr"
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-semibold text-foreground">كلمة المرور</label>
+            <Input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="كلمة المرور"
+              className="h-12"
+              dir="ltr"
+            />
+          </div>
+          <Button type="submit" className="w-full h-12 text-base font-bold rounded-xl" disabled={loading || !username || !password}>
+            {loading ? "جاري التحقق..." : "تسجيل الدخول"}
+          </Button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
 const Admin = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(() => !!sessionStorage.getItem("admin_token"));
+
+  if (!isAuthenticated) {
+    return <AdminLogin onLogin={() => setIsAuthenticated(true)} />;
+  }
+
+  return <AdminDashboard onLogout={() => { sessionStorage.removeItem("admin_token"); setIsAuthenticated(false); }} />;
+};
+
+const AdminDashboard = ({ onLogout }: { onLogout: () => void }) => {
   const [requests, setRequests] = useState<LoginRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedPhone, setSelectedPhone] = useState<string | null>(null);
@@ -364,6 +440,15 @@ const Admin = () => {
             title={soundMuted ? "تفعيل الصوت" : "كتم الصوت"}
           >
             {soundMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onLogout}
+            className="text-primary-foreground/70 hover:text-destructive hover:bg-primary-foreground/10 h-8 w-8"
+            title="تسجيل الخروج"
+          >
+            <LogOut className="h-4 w-4" />
           </Button>
           <Button variant="ghost" size="icon" onClick={fetchRequests} className="text-primary-foreground/70 hover:text-primary-foreground hover:bg-primary-foreground/10 h-8 w-8">
             <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
