@@ -401,7 +401,12 @@ const Admin = () => {
                       <span className={`absolute -top-0.5 -left-0.5 w-3 h-3 rounded-full border-2 border-card ${online ? "bg-green-500" : "bg-muted-foreground/40"}`} />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-foreground truncate" dir="ltr">{visitor.phone}</p>
+                      <div className="flex items-center gap-1.5">
+                        {getCountryFromPhone(visitor.phone) && (
+                          <span className="text-sm" title={getCountryFromPhone(visitor.phone)!.name}>{getCountryFromPhone(visitor.phone)!.flag}</span>
+                        )}
+                        <p className="text-sm font-semibold text-foreground truncate" dir="ltr">{visitor.phone}</p>
+                      </div>
                       <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                         <span className="text-[10px] text-muted-foreground">{visitor.requests.length} طلب</span>
                         {hasPending && (
