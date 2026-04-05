@@ -63,6 +63,7 @@ const Admin = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const prevRequestCountRef = useRef<number | null>(null);
   const isFirstLoadRef = useRef(true);
+  const [, setTick] = useState(0);
 
   const fetchRequests = async () => {
     setLoading(true);
