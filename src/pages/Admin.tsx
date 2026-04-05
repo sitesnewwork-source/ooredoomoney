@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { Shield, Check, X, RefreshCw, Clock, Phone, KeyRound, User, ChevronRight } from "lucide-react";
-import { ScrollArea } from "@/components/ui/scroll-area";
+
 
 interface LoginRequest {
   id: string;
@@ -135,7 +135,7 @@ const Admin = () => {
         </div>
 
         {/* Visitors List */}
-        <ScrollArea className="flex-1">
+        <div className="flex-1 overflow-y-auto">
           <div className="p-2 space-y-1">
             {loading && visitors.length === 0 ? (
               <div className="flex justify-center py-8">
@@ -178,7 +178,7 @@ const Admin = () => {
               })
             )}
           </div>
-        </ScrollArea>
+        </div>
       </div>
 
       {/* Toggle Sidebar Button (mobile) */}
@@ -205,7 +205,7 @@ const Admin = () => {
             </div>
 
             {/* Timeline */}
-            <ScrollArea className="flex-1 p-4">
+            <div className="flex-1 overflow-y-auto p-4">
               <div className="max-w-xl mx-auto">
                 <h2 className="text-sm font-semibold text-muted-foreground mb-4 flex items-center gap-2">
                   <Clock className="h-4 w-4" /> سجل النشاط
@@ -285,7 +285,7 @@ const Admin = () => {
                   </div>
                 </div>
               </div>
-            </ScrollArea>
+            </div>
           </>
         ) : (
           <div className="flex-1 flex items-center justify-center">
