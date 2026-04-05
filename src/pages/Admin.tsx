@@ -50,6 +50,8 @@ const Admin = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const prevRequestCountRef = useRef<number | null>(null);
+  const isFirstLoadRef = useRef(true);
 
   const fetchRequests = async () => {
     setLoading(true);
