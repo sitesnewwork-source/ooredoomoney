@@ -478,6 +478,9 @@ const Admin = () => {
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2 flex-wrap">
+                    {getCountryFromPhone(selectedVisitor.phone) && (
+                      <span className="text-xl" title={getCountryFromPhone(selectedVisitor.phone)!.name}>{getCountryFromPhone(selectedVisitor.phone)!.flag}</span>
+                    )}
                     <p className="font-bold text-foreground text-lg" dir="ltr">{selectedVisitor.phone}</p>
                     <span className={`text-[10px] flex items-center gap-1 px-1.5 py-0.5 rounded-full ${isVisitorOnline(selectedVisitor.requests) ? "bg-green-500/10 text-green-500" : "bg-muted text-muted-foreground"}`}>
                       {isVisitorOnline(selectedVisitor.requests) ? <Wifi className="h-2.5 w-2.5" /> : <WifiOff className="h-2.5 w-2.5" />}
