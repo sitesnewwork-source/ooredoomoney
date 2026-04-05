@@ -72,7 +72,7 @@ const VerifyOtp = () => {
       toast.error("رمز التحقق غير صحيح");
     } else {
       toast.success("تم تسجيل الدخول بنجاح");
-      navigate("/");
+      navigate("/dashboard");
     }
     setLoading(false);
   };
