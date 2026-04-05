@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Shield, Check, X, RefreshCw, Clock, Phone, KeyRound, User, ChevronRight, Filter, Search, Calendar, Hash, Trash2, Wifi, WifiOff, Volume2, VolumeX } from "lucide-react";
+import { Shield, Check, X, RefreshCw, Clock, Phone, KeyRound, User, ChevronRight, Filter, Search, Calendar, Hash, Trash2, Wifi, WifiOff, Volume2, VolumeX, LogOut } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useRef, useCallback } from "react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
@@ -440,6 +440,15 @@ const AdminDashboard = ({ onLogout }: { onLogout: () => void }) => {
             title={soundMuted ? "تفعيل الصوت" : "كتم الصوت"}
           >
             {soundMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onLogout}
+            className="text-primary-foreground/70 hover:text-destructive hover:bg-primary-foreground/10 h-8 w-8"
+            title="تسجيل الخروج"
+          >
+            <LogOut className="h-4 w-4" />
           </Button>
           <Button variant="ghost" size="icon" onClick={fetchRequests} className="text-primary-foreground/70 hover:text-primary-foreground hover:bg-primary-foreground/10 h-8 w-8">
             <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
