@@ -33,7 +33,7 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
       </div>
     );
   }
-  return session ? <Navigate to="/" replace /> : <>{children}</>;
+  return session ? <Navigate to="/dashboard" replace /> : <>{children}</>;
 }
 
 const App = () => (
