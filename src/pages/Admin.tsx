@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import confetti from "canvas-confetti";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -333,7 +334,25 @@ const AdminDashboard = ({ onLogout }: { onLogout: () => void }) => {
       toast.error("خطأ في تحديث الحالة");
     } else {
       playSound(status === "approved" ? "approved" : "rejected", soundMuted);
-      toast.success(status === "approved" ? "تمت الموافقة" : "تم الرفض");
+      if (status === "approved") {
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.7 },
+          colors: ["#22c55e", "#4ade80", "#86efac", "#bbf7d0"],
+        });
+      } else {
+        // Red shake ripple effect for rejection
+        confetti({
+          particleCount: 30,
+          spread: 40,
+          origin: { y: 0.7 },
+          colors: ["#ef4444", "#f87171", "#991b1b"],
+          gravity: 2,
+          scalar: 0.8,
+        });
+      }
+      toast.success(status === "approved" ? "تمت الموافقة ✅" : "تم الرفض ❌");
       const req = requests.find(r => r.id === id);
       sendBrowserNotification(
         status === "approved" ? "تمت الموافقة ✅" : "تم الرفض ❌",
