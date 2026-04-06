@@ -152,7 +152,22 @@ const Home = () => {
           </p>
         </div>
 
-        {/* Stats Cards */}
+        {/* Winners Counter */}
+        <div
+          className="w-full max-w-sm glass-card rounded-2xl p-4 flex items-center justify-center gap-3 animate-fade-in"
+          style={{ animationDelay: "0.9s", animationFillMode: "both" }}
+        >
+          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+            <Trophy className="h-5 w-5 text-primary" />
+          </div>
+          <div className="text-center">
+            <span className="text-2xl font-extrabold text-foreground tabular-nums">
+              {winnersCount.toLocaleString("ar-SA")}+
+            </span>
+            <p className="text-[10px] text-muted-foreground">فائز حتى الآن</p>
+          </div>
+        </div>
+
         {/* Countdown Timer */}
         <div
           className="w-full max-w-sm glass-card rounded-2xl p-4 animate-fade-in"
