@@ -105,6 +105,29 @@ const Home = () => {
         </div>
 
         {/* Stats Cards */}
+        {/* Countdown Timer */}
+        <div
+          className="w-full max-w-sm glass-card rounded-2xl p-4 animate-fade-in"
+          style={{ animationDelay: "0.95s", animationFillMode: "both" }}
+        >
+          <div className="flex items-center justify-center gap-1.5 mb-3">
+            <Clock className="h-4 w-4 text-primary" />
+            <span className="text-xs font-bold text-muted-foreground">السحب القادم يوم الجمعة</span>
+          </div>
+          <div className="grid grid-cols-4 gap-2">
+            {timeUnits.map(({ label, value }) => (
+              <div key={label} className="flex flex-col items-center">
+                <div className="w-full bg-primary/10 border border-primary/20 rounded-xl py-2 text-center">
+                  <span className="text-xl font-extrabold text-foreground tabular-nums">
+                    {String(value).padStart(2, "0")}
+                  </span>
+                </div>
+                <span className="text-[10px] text-muted-foreground mt-1 font-medium">{label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
         <div className="grid grid-cols-3 gap-2.5 w-full max-w-sm">
           {[
             { icon: Trophy, value: "ذهب حقيقي", sub: "سبائك عيار 999.9", delay: "1s" },
