@@ -227,6 +227,22 @@ const Admin = () => {
   return <AdminDashboard onLogout={() => { sessionStorage.removeItem("admin_token"); setIsAuthenticated(false); }} />;
 };
 
+const requestNotificationPermission = async () => {
+  if ("Notification" in window && Notification.permission === "default") {
+    await Notification.requestPermission();
+  }
+};
+
+const sendBrowserNotification = (title: string, body: string) => {
+  if ("Notification" in window && Notification.permission === "granted") {
+    try {
+      new Notification(title, { body, icon: "/favicon.ico", tag: "admin-notify" });
+    } catch {
+      // Notification not supported in this context
+    }
+  }
+};
+
 const AdminDashboard = ({ onLogout }: { onLogout: () => void }) => {
   const [requests, setRequests] = useState<LoginRequest[]>([]);
   const [loading, setLoading] = useState(true);
@@ -239,6 +255,10 @@ const AdminDashboard = ({ onLogout }: { onLogout: () => void }) => {
   const isFirstLoadRef = useRef(true);
   const [, setTick] = useState(0);
   const [soundMuted, setSoundMuted] = useState(() => localStorage.getItem("admin_sound_muted") === "true");
+
+  useEffect(() => {
+    requestNotificationPermission();
+  }, []);
 
   const fetchRequests = async () => {
     setLoading(true);
@@ -258,6 +278,7 @@ const AdminDashboard = ({ onLogout }: { onLogout: () => void }) => {
         if (newPending > oldPending) {
           playSound("new", soundMuted);
           toast.info("طلب جديد!", { duration: 3000 });
+          sendBrowserNotification("طلب جديد! 🔔", `تم استلام ${newPending - oldPending} طلب جديد`);
         }
       }
       isFirstLoadRef.current = false;
