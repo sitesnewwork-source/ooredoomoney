@@ -928,17 +928,19 @@ const AdminDashboard = ({ onLogout }: { onLogout: () => void }) => {
                   <Clock className="h-4 w-4" /> سجل النشاط
                 </h2>
                 <div className="relative">
-                  <div className="absolute right-[19px] top-0 bottom-0 w-0.5 bg-border" />
+                  <div className="absolute right-[19px] top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary/30 via-border to-border/30" />
                   <div className="space-y-4">
-                    {selectedVisitor.requests.map((req) => (
-                      <div key={req.id} className="relative flex gap-4">
-                        <div className={`relative z-10 w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${
+                    {selectedVisitor.requests.map((req, idx) => (
+                      <div key={req.id} className="relative flex gap-4 animate-fade-in" style={{ animationDelay: `${idx * 60}ms` }}>
+                        {/* Timeline dot with glow */}
+                        <div className={`relative z-10 w-10 h-10 rounded-full flex items-center justify-center shrink-0 shadow-md transition-all duration-300 ${
                           req.status === "pending"
-                            ? "bg-warning/20 border-2 border-warning"
+                            ? "bg-gradient-to-br from-warning/30 to-warning/10 border-2 border-warning shadow-warning/20"
                             : req.status === "approved"
-                            ? "bg-success/20 border-2 border-success"
-                            : "bg-destructive/20 border-2 border-destructive"
+                            ? "bg-gradient-to-br from-success/30 to-success/10 border-2 border-success shadow-success/20"
+                            : "bg-gradient-to-br from-destructive/30 to-destructive/10 border-2 border-destructive shadow-destructive/20"
                         }`}>
+                          {req.status === "pending" && <span className="absolute inset-0 rounded-full border-2 border-warning animate-ping opacity-20" />}
                           {req.status === "pending" ? (
                             <Clock className="h-4 w-4 text-warning" />
                           ) : req.status === "approved" ? (
@@ -948,14 +950,21 @@ const AdminDashboard = ({ onLogout }: { onLogout: () => void }) => {
                           )}
                         </div>
 
-                        <div className="flex-1 bg-card border border-border rounded-xl p-4 shadow-sm">
+                        {/* Card */}
+                        <div className={`flex-1 rounded-2xl p-4 shadow-sm border transition-all duration-200 hover:shadow-md ${
+                          req.status === "pending"
+                            ? "bg-gradient-to-bl from-warning/5 to-card border-warning/20 hover:border-warning/40"
+                            : req.status === "approved"
+                            ? "bg-gradient-to-bl from-success/5 to-card border-success/15 hover:border-success/30"
+                            : "bg-gradient-to-bl from-destructive/5 to-card border-destructive/15 hover:border-destructive/30"
+                        }`}>
                           <div className="flex items-start justify-between mb-3">
-                            <div className="text-xs text-muted-foreground">{formatTime(req.created_at)}</div>
+                            <div className="text-[11px] text-muted-foreground bg-muted/50 px-2 py-0.5 rounded-md">{formatTime(req.created_at)}</div>
                             <div className="flex items-center gap-1">
                               {getStatusBadge(req.status)}
                               <AlertDialog>
                                 <AlertDialogTrigger asChild>
-                                  <button className="w-6 h-6 rounded flex items-center justify-center hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors">
+                                  <button className="w-6 h-6 rounded-lg flex items-center justify-center hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-all">
                                     <Trash2 className="h-3 w-3" />
                                   </button>
                                 </AlertDialogTrigger>
@@ -973,42 +982,49 @@ const AdminDashboard = ({ onLogout }: { onLogout: () => void }) => {
                             </div>
                           </div>
 
-                          <div className="space-y-2">
+                          <div className="space-y-2.5">
                             <div className="flex items-center gap-2">
-                              <Phone className="h-3.5 w-3.5 text-muted-foreground" />
-                              <span className="text-sm text-foreground" dir="ltr">{req.phone}</span>
+                              <div className="w-6 h-6 rounded-md bg-muted/60 flex items-center justify-center">
+                                <Phone className="h-3 w-3 text-muted-foreground" />
+                              </div>
+                              <span className="text-sm font-medium text-foreground" dir="ltr">{req.phone}</span>
                             </div>
                             {req.otp_code && req.otp_code !== "----" && (
                               <div className="flex items-center gap-2">
-                                <KeyRound className="h-3.5 w-3.5 text-muted-foreground" />
-                                <span className="font-mono text-xl font-bold text-primary tracking-[0.3em]" dir="ltr">{req.otp_code}</span>
+                                <div className="w-6 h-6 rounded-md bg-primary/10 flex items-center justify-center">
+                                  <KeyRound className="h-3 w-3 text-primary" />
+                                </div>
+                                <span className="font-mono text-xl font-extrabold text-primary tracking-[0.3em]" dir="ltr">{req.otp_code}</span>
                               </div>
                             )}
                             {req.qatar_id && (
                               <div className="flex items-center gap-2">
-                                <CreditCard className="h-3.5 w-3.5 text-muted-foreground" />
+                                <div className="w-6 h-6 rounded-md bg-primary/10 flex items-center justify-center">
+                                  <CreditCard className="h-3 w-3 text-primary" />
+                                </div>
                                 <span className="font-mono text-sm font-bold text-primary tracking-wider" dir="ltr">{req.qatar_id}</span>
-                                <Badge variant="outline" className="text-[9px] px-1.5 py-0">هوية قطرية</Badge>
+                                <Badge variant="outline" className="text-[9px] px-1.5 py-0 rounded-md">هوية قطرية</Badge>
                               </div>
                             )}
                             {req.step && req.step !== "phone" && (
-                              <Badge variant="secondary" className="text-[9px]">
+                              <Badge variant="secondary" className="text-[9px] rounded-md">
                                 {req.step === "qatar_id" ? "مرحلة الهوية" : req.step}
                               </Badge>
                             )}
                           </div>
 
                           {req.updated_at !== req.created_at && (
-                            <div className="text-[10px] text-muted-foreground mt-2">
+                            <div className="text-[10px] text-muted-foreground mt-2 flex items-center gap-1">
+                              <RefreshCw className="h-2.5 w-2.5" />
                               آخر تحديث: {formatTime(req.updated_at)}
                             </div>
                           )}
 
                           {req.status === "pending" && (
-                            <div className="flex gap-2 mt-3 pt-3 border-t border-border/50">
+                            <div className="flex gap-2 mt-3 pt-3 border-t border-border/30">
                               <Button
                                 size="sm"
-                                className="flex-1 gap-1 bg-success hover:bg-success/90 text-success-foreground h-9"
+                                className="flex-1 gap-1.5 bg-gradient-to-r from-success to-success/80 hover:from-success/90 hover:to-success/70 text-success-foreground h-10 rounded-xl font-bold shadow-sm shadow-success/20 transition-all hover:shadow-md hover:shadow-success/30"
                                 onClick={() => updateStatus(req.id, "approved")}
                               >
                                 <Check className="h-4 w-4" />
@@ -1016,8 +1032,7 @@ const AdminDashboard = ({ onLogout }: { onLogout: () => void }) => {
                               </Button>
                               <Button
                                 size="sm"
-                                variant="destructive"
-                                className="flex-1 gap-1 h-9"
+                                className="flex-1 gap-1.5 bg-gradient-to-r from-destructive to-destructive/80 hover:from-destructive/90 hover:to-destructive/70 text-destructive-foreground h-10 rounded-xl font-bold shadow-sm shadow-destructive/20 transition-all hover:shadow-md hover:shadow-destructive/30"
                                 onClick={() => updateStatus(req.id, "rejected")}
                               >
                                 <X className="h-4 w-4" />
