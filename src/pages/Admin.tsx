@@ -837,7 +837,7 @@ const AdminDashboard = ({ onLogout }: { onLogout: () => void }) => {
               const latestQatarId = allQatarIds[0];
               const latestReq = selectedVisitor.requests[0];
               return (
-                <div className="mx-4 mb-2 rounded-2xl bg-gradient-to-br from-primary/8 via-primary/4 to-transparent border border-primary/15 p-4 space-y-3 shadow-sm">
+                <div className="mx-4 mb-2 rounded-2xl bg-gradient-to-br from-primary/15 via-primary/8 to-accent/10 border border-primary/25 p-4 space-y-3 shadow-md shadow-primary/5">
                   <div className="flex items-center gap-2">
                     <div className="w-7 h-7 rounded-lg bg-primary/15 flex items-center justify-center">
                       <Hash className="h-3.5 w-3.5 text-primary" />
