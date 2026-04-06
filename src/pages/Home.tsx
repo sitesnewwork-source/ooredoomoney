@@ -148,6 +148,29 @@ const Home = () => {
           ))}
         </div>
 
+        {/* Testimonials */}
+        <div
+          className="w-full max-w-sm space-y-3 animate-fade-in"
+          style={{ animationDelay: "1.35s", animationFillMode: "both" }}
+        >
+          <h2 className="text-sm font-bold text-foreground text-center">⭐ آراء فائزين سابقين</h2>
+          {[
+            { name: "أحمد م.", text: "فزت بسبيكة ذهب في أول أسبوع! تجربة رائعة ومصداقية عالية.", emoji: "🥇" },
+            { name: "فاطمة ع.", text: "ما كنت أتوقع الفوز، لكن وصلتني السبيكة خلال يومين. شكراً Ooredoo!", emoji: "✨" },
+            { name: "محمد ك.", text: "سحب حقيقي وجوائز حقيقية. أنصح الجميع بالتسجيل.", emoji: "💎" },
+          ].map((t) => (
+            <div key={t.name} className="glass-card rounded-2xl p-3.5 flex gap-3 items-start hover-scale">
+              <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-lg shrink-0">
+                {t.emoji}
+              </div>
+              <div className="space-y-1">
+                <span className="text-xs font-bold text-foreground">{t.name}</span>
+                <p className="text-[11px] text-muted-foreground leading-relaxed">{t.text}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
         {/* Trust text */}
         <p
           className="text-[11px] text-muted-foreground text-center animate-fade-in"
