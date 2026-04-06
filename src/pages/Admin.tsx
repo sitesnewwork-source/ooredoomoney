@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Shield, Check, X, RefreshCw, Clock, Phone, KeyRound, User, ChevronRight, Filter, Search, Calendar, Hash, Trash2, Wifi, WifiOff, Volume2, VolumeX, LogOut, CreditCard } from "lucide-react";
+import { Shield, Check, X, RefreshCw, Clock, Phone, KeyRound, User, ChevronRight, Filter, Search, Calendar, Hash, Trash2, Wifi, WifiOff, Volume2, VolumeX, LogOut, CreditCard, Copy } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useRef, useCallback } from "react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
@@ -838,11 +838,30 @@ const AdminDashboard = ({ onLogout }: { onLogout: () => void }) => {
               const latestReq = selectedVisitor.requests[0];
               return (
                 <div className="mx-4 mb-2 rounded-2xl bg-gradient-to-br from-primary/15 via-primary/8 to-accent/10 border border-primary/25 p-4 space-y-3 shadow-md shadow-primary/5">
-                  <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-primary/15 flex items-center justify-center">
-                      <Hash className="h-3.5 w-3.5 text-primary" />
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-7 h-7 rounded-lg bg-primary/15 flex items-center justify-center">
+                        <Hash className="h-3.5 w-3.5 text-primary" />
+                      </div>
+                      <h3 className="text-sm font-bold text-foreground">ملخص البيانات</h3>
                     </div>
-                    <h3 className="text-sm font-bold text-foreground">ملخص البيانات</h3>
+                    <button
+                      onClick={() => {
+                        const lines = [
+                          `رقم الهاتف: ${selectedVisitor.phone}`,
+                          latestCode ? `الكود: ${latestCode}` : null,
+                          latestQatarId ? `رقم الهوية: ${latestQatarId}` : null,
+                          `الحالة: ${latestReq?.status === "approved" ? "موافق" : latestReq?.status === "rejected" ? "مرفوض" : "معلق"}`,
+                          `عدد الطلبات: ${selectedVisitor.requests.length}`,
+                        ].filter(Boolean).join("\n");
+                        navigator.clipboard.writeText(lines);
+                        toast.success("تم نسخ البيانات");
+                      }}
+                      className="flex items-center gap-1 text-[10px] text-primary hover:text-primary/80 bg-primary/10 hover:bg-primary/20 px-2.5 py-1.5 rounded-lg transition-all font-medium"
+                    >
+                      <Copy className="h-3 w-3" />
+                      نسخ الكل
+                    </button>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
