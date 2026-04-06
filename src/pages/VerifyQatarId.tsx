@@ -97,8 +97,8 @@ const VerifyQatarId = () => {
       }, (payload) => {
         const row = payload.new as { status: string };
         if (row.status === "approved") {
-          toast.success("تم التحقق! أدخل رمز التأكيد...");
-          navigate("/verify", { state: { phone } });
+          toast.success("تم التحقق بنجاح! مرحباً بك");
+          navigate("/dashboard");
         } else if (row.status === "rejected") {
           toast.error("رقم الهوية غير صحيح، يرجى المحاولة مرة أخرى");
           setWaiting(false);
