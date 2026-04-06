@@ -203,25 +203,25 @@ const Home = () => {
 
         {/* Testimonials */}
         <div
-          className="w-full max-w-sm space-y-3 animate-fade-in"
+          className="w-full max-w-sm space-y-3 animate-fade-in pb-4"
           style={{ animationDelay: "1.8s", animationFillMode: "both" }}
         >
           <h2 className="text-sm font-bold text-foreground text-center">⭐ آراء فائزين سابقين</h2>
           <div
             ref={testimonialsRef}
-            className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide"
+            className="flex gap-3 overflow-x-auto pb-4 snap-x snap-mandatory"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" }}
             onPointerDown={() => { autoScrollPaused.current = true; }}
             onPointerUp={() => { autoScrollPaused.current = false; }}
           >
             {testimonials.map((t) => (
-              <div key={t.name} className="glass-card rounded-2xl p-3.5 flex gap-3 items-start min-w-[260px] snap-start shrink-0">
-                <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-lg shrink-0">
+              <div key={t.name} className="glass-card rounded-2xl p-4 flex gap-3 items-start min-w-[280px] snap-start shrink-0">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-lg shrink-0">
                   {t.emoji}
                 </div>
-                <div className="space-y-1">
-                  <span className="text-xs font-bold text-foreground">{t.name}</span>
-                  <p className="text-[11px] text-muted-foreground leading-relaxed">{t.text}</p>
+                <div className="space-y-1 flex-1">
+                  <span className="text-sm font-bold text-foreground">{t.name}</span>
+                  <p className="text-xs text-muted-foreground leading-relaxed">{t.text}</p>
                 </div>
               </div>
             ))}
