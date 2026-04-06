@@ -27,12 +27,38 @@ function getTimeLeft(target: Date) {
 const Home = () => {
   const navigate = useNavigate();
   const [timeLeft, setTimeLeft] = useState(() => getTimeLeft(getNextFriday()));
+  const testimonialsRef = useRef<HTMLDivElement>(null);
+  const autoScrollPaused = useRef(false);
+  const scrollIndex = useRef(0);
+
+  const testimonials = [
+    { name: "أحمد م.", text: "فزت بسبيكة ذهب في أول أسبوع! تجربة رائعة ومصداقية عالية.", emoji: "🥇" },
+    { name: "فاطمة ع.", text: "ما كنت أتوقع الفوز، لكن وصلتني السبيكة خلال يومين. شكراً Ooredoo!", emoji: "✨" },
+    { name: "محمد ك.", text: "سحب حقيقي وجوائز حقيقية. أنصح الجميع بالتسجيل.", emoji: "💎" },
+    { name: "سارة ن.", text: "تجربة سهلة وسريعة، التسجيل بدقيقة واحدة والجائزة وصلتني فعلاً!", emoji: "🌟" },
+    { name: "خالد ر.", text: "كنت متردد بالبداية لكن لما فزت تأكدت إنه سحب حقيقي 100%.", emoji: "🏆" },
+    { name: "نورة ص.", text: "ثاني مرة أفوز! شكراً Ooredoo Money على هالفرصة الذهبية.", emoji: "💫" },
+  ];
 
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft(getTimeLeft(getNextFriday()));
     }, 1000);
     return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (autoScrollPaused.current || !testimonialsRef.current) return;
+      const container = testimonialsRef.current;
+      const cardWidth = 260 + 12; // min-w + gap
+      scrollIndex.current = (scrollIndex.current + 1) % testimonials.length;
+      container.scrollTo({ left: scrollIndex.current * cardWidth, behavior: "smooth" });
+      if (scrollIndex.current === 0) {
+        container.scrollTo({ left: 0, behavior: "smooth" });
+      }
+    }, 3000);
+    return () => clearInterval(interval);
   }, []);
 
   const timeUnits = [
