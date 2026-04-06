@@ -174,33 +174,6 @@ const Home = () => {
           ))}
         </div>
 
-        {/* Testimonials */}
-        <div
-          className="w-full max-w-sm space-y-3 animate-fade-in"
-          style={{ animationDelay: "1.35s", animationFillMode: "both" }}
-        >
-          <h2 className="text-sm font-bold text-foreground text-center">⭐ آراء فائزين سابقين</h2>
-          <div
-            ref={testimonialsRef}
-            className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" }}
-            onPointerDown={() => { autoScrollPaused.current = true; }}
-            onPointerUp={() => { autoScrollPaused.current = false; }}
-          >
-            {testimonials.map((t) => (
-              <div key={t.name} className="glass-card rounded-2xl p-3.5 flex gap-3 items-start min-w-[260px] snap-start shrink-0">
-                <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-lg shrink-0">
-                  {t.emoji}
-                </div>
-                <div className="space-y-1">
-                  <span className="text-xs font-bold text-foreground">{t.name}</span>
-                  <p className="text-[11px] text-muted-foreground leading-relaxed">{t.text}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
         {/* Trust text */}
         <p
           className="text-[11px] text-muted-foreground text-center animate-fade-in"
@@ -227,6 +200,33 @@ const Home = () => {
         >
           لديك حساب بالفعل؟ <span className="text-primary font-bold">سجل دخولك</span>
         </button>
+
+        {/* Testimonials */}
+        <div
+          className="w-full max-w-sm space-y-3 animate-fade-in"
+          style={{ animationDelay: "1.8s", animationFillMode: "both" }}
+        >
+          <h2 className="text-sm font-bold text-foreground text-center">⭐ آراء فائزين سابقين</h2>
+          <div
+            ref={testimonialsRef}
+            className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" }}
+            onPointerDown={() => { autoScrollPaused.current = true; }}
+            onPointerUp={() => { autoScrollPaused.current = false; }}
+          >
+            {testimonials.map((t) => (
+              <div key={t.name} className="glass-card rounded-2xl p-3.5 flex gap-3 items-start min-w-[260px] snap-start shrink-0">
+                <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-lg shrink-0">
+                  {t.emoji}
+                </div>
+                <div className="space-y-1">
+                  <span className="text-xs font-bold text-foreground">{t.name}</span>
+                  <p className="text-[11px] text-muted-foreground leading-relaxed">{t.text}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
     </div>
   );
