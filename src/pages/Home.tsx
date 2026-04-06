@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { LogIn, Trophy, Gift, Users } from "lucide-react";
+import { LogIn, Trophy, Gift, Users, Star, ChevronLeft } from "lucide-react";
 import ooredooLogo from "@/assets/ooredoo-logo.webp";
 import goldBars from "@/assets/gold-bars.png";
 
@@ -8,79 +8,115 @@ const Home = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-background px-4 py-8" dir="rtl">
-      <div className="flex flex-col items-center space-y-6 max-w-md w-full">
+    <div className="min-h-screen flex flex-col bg-background overflow-hidden" dir="rtl">
+      {/* Hero Section */}
+      <section className="relative flex flex-col items-center px-4 pt-8 pb-0">
+        {/* Background glow */}
+        <div className="absolute top-20 left-1/2 -translate-x-1/2 w-80 h-80 bg-[#d4a017]/10 rounded-full blur-[100px] pointer-events-none" />
+
         {/* Logo */}
         <img
           src={ooredooLogo}
           alt="Ooredoo Money"
-          className="h-14 object-contain animate-fade-in"
+          className="h-12 object-contain animate-fade-in mb-4"
           style={{ animationDelay: "0.1s", animationFillMode: "both" }}
         />
 
-        {/* Gold Promo Image */}
+        {/* Badge */}
         <div
-          className="w-72 h-72 flex items-center justify-center relative animate-scale-in"
-          style={{ animationDelay: "0.3s", animationFillMode: "both" }}
+          className="flex items-center gap-1.5 bg-primary/10 border border-primary/20 rounded-full px-4 py-1.5 mb-6 animate-fade-in"
+          style={{ animationDelay: "0.2s", animationFillMode: "both" }}
         >
-          <div className="absolute inset-0 rounded-full bg-[#d4a017]/20 blur-3xl animate-pulse" />
+          <Star className="h-3.5 w-3.5 text-primary fill-primary" />
+          <span className="text-xs font-bold text-primary">عرض حصري لفترة محدودة</span>
+          <Star className="h-3.5 w-3.5 text-primary fill-primary" />
+        </div>
+
+        {/* Gold Image */}
+        <div
+          className="relative w-56 h-56 flex items-center justify-center animate-scale-in"
+          style={{ animationDelay: "0.4s", animationFillMode: "both" }}
+        >
+          <div className="absolute inset-0 rounded-full bg-[#d4a017]/25 blur-3xl animate-pulse" />
+          <div className="absolute inset-4 rounded-full bg-[#d4a017]/15 blur-2xl" />
           <img
             src={goldBars}
             alt="سبائك ذهب"
-            className="w-full h-full object-contain relative z-10 drop-shadow-[0_0_25px_rgba(212,160,23,0.4)]"
+            className="w-full h-full object-contain relative z-10 drop-shadow-[0_0_30px_rgba(212,160,23,0.5)]"
           />
         </div>
+      </section>
 
-        {/* Promo Info */}
-        <div className="text-center space-y-2">
+      {/* Content Section */}
+      <section className="flex flex-col items-center px-6 pt-4 pb-8 space-y-5">
+        {/* Headline */}
+        <div className="text-center space-y-3">
           <h1
-            className="text-2xl font-extrabold text-foreground animate-fade-in"
-            style={{ animationDelay: "0.5s", animationFillMode: "both" }}
+            className="text-3xl font-extrabold text-foreground leading-tight animate-fade-in"
+            style={{ animationDelay: "0.6s", animationFillMode: "both" }}
           >
-            اربح سبائك الذهب
+            فرصتك الذهبية
+            <br />
+            <span className="text-primary">للفوز بسبائك الذهب!</span>
           </h1>
           <p
-            className="text-primary text-lg font-bold animate-fade-in"
-            style={{ animationDelay: "0.7s", animationFillMode: "both" }}
+            className="text-muted-foreground text-sm leading-relaxed max-w-xs mx-auto animate-fade-in"
+            style={{ animationDelay: "0.8s", animationFillMode: "both" }}
           >
-            سجل في السحب الآن
-          </p>
-          <p
-            className="text-muted-foreground text-sm leading-relaxed animate-fade-in"
-            style={{ animationDelay: "0.9s", animationFillMode: "both" }}
-          >
-            كن من بين 30 فائزًا بالذهب كل أسبوع! خاص بعملاء محفظة اوريدو موني.
+            سجّل الآن في السحب الأسبوعي وكن واحداً من
+            <span className="text-foreground font-bold"> 30 فائزاً محظوظاً </span>
+            بسبائك ذهب حقيقية!
           </p>
         </div>
 
-        {/* Features */}
-        <div className="grid grid-cols-3 gap-3 w-full">
+        {/* Stats Cards */}
+        <div className="grid grid-cols-3 gap-2.5 w-full max-w-sm">
           {[
-            { icon: Trophy, label: "جوائز ذهبية", delay: "1.1s" },
-            { icon: Gift, label: "سحب أسبوعي", delay: "1.25s" },
-            { icon: Users, label: "30 فائز", delay: "1.4s" },
-          ].map(({ icon: Icon, label, delay }) => (
+            { icon: Trophy, value: "ذهب حقيقي", sub: "سبائك عيار 999.9", delay: "1s" },
+            { icon: Gift, value: "كل أسبوع", sub: "سحب مستمر", delay: "1.15s" },
+            { icon: Users, value: "30 فائز", sub: "أسبوعياً", delay: "1.3s" },
+          ].map(({ icon: Icon, value, sub, delay }) => (
             <div
-              key={label}
-              className="glass-card rounded-xl p-3 flex flex-col items-center gap-2 text-center hover-scale animate-scale-in"
+              key={value}
+              className="glass-card rounded-2xl p-3 flex flex-col items-center gap-1.5 text-center hover-scale animate-scale-in"
               style={{ animationDelay: delay, animationFillMode: "both" }}
             >
-              <Icon className="h-6 w-6 text-primary" />
-              <span className="text-xs text-muted-foreground font-medium">{label}</span>
+              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Icon className="h-5 w-5 text-primary" />
+              </div>
+              <span className="text-xs font-bold text-foreground">{value}</span>
+              <span className="text-[10px] text-muted-foreground">{sub}</span>
             </div>
           ))}
         </div>
 
+        {/* Trust text */}
+        <p
+          className="text-[11px] text-muted-foreground text-center animate-fade-in"
+          style={{ animationDelay: "1.4s", animationFillMode: "both" }}
+        >
+          🔒 التسجيل مجاني وآمن — خاص بعملاء محفظة Ooredoo Money
+        </p>
+
         {/* CTA Button */}
         <Button
           onClick={() => navigate("/login")}
-          className="w-full rounded-xl h-12 text-base font-bold gap-2 animate-fade-in hover-scale"
-          style={{ animationDelay: "1.6s", animationFillMode: "both" }}
+          className="w-full max-w-sm rounded-2xl h-14 text-lg font-extrabold gap-2 shadow-lg shadow-primary/20 animate-fade-in hover-scale"
+          style={{ animationDelay: "1.5s", animationFillMode: "both" }}
         >
-          <LogIn className="h-5 w-5" />
-          سجل الآن
+          سجّل الآن واربح
+          <ChevronLeft className="h-5 w-5" />
         </Button>
-      </div>
+
+        {/* Secondary link */}
+        <button
+          onClick={() => navigate("/login")}
+          className="text-xs text-muted-foreground hover:text-primary transition-colors animate-fade-in"
+          style={{ animationDelay: "1.7s", animationFillMode: "both" }}
+        >
+          لديك حساب بالفعل؟ <span className="text-primary font-bold">سجل دخولك</span>
+        </button>
+      </section>
     </div>
   );
 };
