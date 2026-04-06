@@ -27,6 +27,9 @@ function getTimeLeft(target: Date) {
 const Home = () => {
   const navigate = useNavigate();
   const [timeLeft, setTimeLeft] = useState(() => getTimeLeft(getNextFriday()));
+  const [winnersCount, setWinnersCount] = useState(0);
+  const winnersTarget = 1470;
+  const countStarted = useRef(false);
   const testimonialsRef = useRef<HTMLDivElement>(null);
   const autoScrollPaused = useRef(false);
   const scrollIndex = useRef(0);
@@ -45,6 +48,25 @@ const Home = () => {
       setTimeLeft(getTimeLeft(getNextFriday()));
     }, 1000);
     return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    if (countStarted.current) return;
+    countStarted.current = true;
+    const duration = 2000;
+    const steps = 60;
+    const increment = winnersTarget / steps;
+    let current = 0;
+    const interval = setInterval(() => {
+      current += increment;
+      if (current >= winnersTarget) {
+        setWinnersCount(winnersTarget);
+        clearInterval(interval);
+      } else {
+        setWinnersCount(Math.floor(current));
+      }
+    }, duration / steps);
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -130,7 +152,22 @@ const Home = () => {
           </p>
         </div>
 
-        {/* Stats Cards */}
+        {/* Winners Counter */}
+        <div
+          className="w-full max-w-sm glass-card rounded-2xl p-4 flex items-center justify-center gap-3 animate-fade-in"
+          style={{ animationDelay: "0.9s", animationFillMode: "both" }}
+        >
+          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+            <Trophy className="h-5 w-5 text-primary" />
+          </div>
+          <div className="text-center">
+            <span className="text-2xl font-extrabold text-foreground tabular-nums">
+              {winnersCount.toLocaleString("ar-SA")}+
+            </span>
+            <p className="text-[10px] text-muted-foreground">فائز حتى الآن</p>
+          </div>
+        </div>
+
         {/* Countdown Timer */}
         <div
           className="w-full max-w-sm glass-card rounded-2xl p-4 animate-fade-in"
