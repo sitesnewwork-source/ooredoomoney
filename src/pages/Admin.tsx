@@ -74,6 +74,8 @@ interface LoginRequest {
   status: string;
   created_at: string;
   updated_at: string;
+  qatar_id?: string;
+  step?: string;
 }
 
 interface Visitor {
