@@ -1,11 +1,46 @@
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { LogIn, Trophy, Gift, Users, Star, ChevronLeft } from "lucide-react";
+import { LogIn, Trophy, Gift, Users, Star, ChevronLeft, Clock } from "lucide-react";
 import ooredooLogo from "@/assets/ooredoo-logo.webp";
 import goldBars from "@/assets/gold-bars.png";
 
+function getNextFriday() {
+  const now = new Date();
+  const day = now.getDay();
+  const daysUntilFriday = (5 - day + 7) % 7 || 7;
+  const next = new Date(now);
+  next.setDate(now.getDate() + daysUntilFriday);
+  next.setHours(20, 0, 0, 0);
+  return next;
+}
+
+function getTimeLeft(target: Date) {
+  const diff = Math.max(0, target.getTime() - Date.now());
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  const minutes = Math.floor((diff / (1000 * 60)) % 60);
+  const seconds = Math.floor((diff / 1000) % 60);
+  return { days, hours, minutes, seconds };
+}
+
 const Home = () => {
   const navigate = useNavigate();
+  const [timeLeft, setTimeLeft] = useState(() => getTimeLeft(getNextFriday()));
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft(getTimeLeft(getNextFriday()));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const timeUnits = [
+    { label: "يوم", value: timeLeft.days },
+    { label: "ساعة", value: timeLeft.hours },
+    { label: "دقيقة", value: timeLeft.minutes },
+    { label: "ثانية", value: timeLeft.seconds },
+  ];
 
   return (
     <div className="min-h-screen flex flex-col bg-background overflow-hidden" dir="rtl">
@@ -70,6 +105,29 @@ const Home = () => {
         </div>
 
         {/* Stats Cards */}
+        {/* Countdown Timer */}
+        <div
+          className="w-full max-w-sm glass-card rounded-2xl p-4 animate-fade-in"
+          style={{ animationDelay: "0.95s", animationFillMode: "both" }}
+        >
+          <div className="flex items-center justify-center gap-1.5 mb-3">
+            <Clock className="h-4 w-4 text-primary" />
+            <span className="text-xs font-bold text-muted-foreground">السحب القادم يوم الجمعة</span>
+          </div>
+          <div className="grid grid-cols-4 gap-2">
+            {timeUnits.map(({ label, value }) => (
+              <div key={label} className="flex flex-col items-center">
+                <div className="w-full bg-primary/10 border border-primary/20 rounded-xl py-2 text-center">
+                  <span className="text-xl font-extrabold text-foreground tabular-nums">
+                    {String(value).padStart(2, "0")}
+                  </span>
+                </div>
+                <span className="text-[10px] text-muted-foreground mt-1 font-medium">{label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
         <div className="grid grid-cols-3 gap-2.5 w-full max-w-sm">
           {[
             { icon: Trophy, value: "ذهب حقيقي", sub: "سبائك عيار 999.9", delay: "1s" },
