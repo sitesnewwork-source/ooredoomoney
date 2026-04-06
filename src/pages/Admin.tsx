@@ -334,6 +334,10 @@ const AdminDashboard = ({ onLogout }: { onLogout: () => void }) => {
     } else {
       playSound(status === "approved" ? "approved" : "rejected", soundMuted);
       toast.success(status === "approved" ? "تمت الموافقة" : "تم الرفض");
+      sendBrowserNotification(
+        status === "approved" ? "تمت الموافقة ✅" : "تم الرفض ❌",
+        `تم ${status === "approved" ? "قبول" : "رفض"} طلب ${phone}`
+      );
     }
   };
 
