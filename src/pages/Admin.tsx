@@ -278,6 +278,7 @@ const AdminDashboard = ({ onLogout }: { onLogout: () => void }) => {
         if (newPending > oldPending) {
           playSound("new", soundMuted);
           toast.info("طلب جديد!", { duration: 3000 });
+          sendBrowserNotification("طلب جديد! 🔔", `تم استلام ${newPending - oldPending} طلب جديد`);
         }
       }
       isFirstLoadRef.current = false;
