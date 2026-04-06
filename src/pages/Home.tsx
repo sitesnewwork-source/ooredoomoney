@@ -1,8 +1,28 @@
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { LogIn, Trophy, Gift, Users, Star, ChevronLeft } from "lucide-react";
+import { LogIn, Trophy, Gift, Users, Star, ChevronLeft, Clock } from "lucide-react";
 import ooredooLogo from "@/assets/ooredoo-logo.webp";
 import goldBars from "@/assets/gold-bars.png";
+
+function getNextFriday() {
+  const now = new Date();
+  const day = now.getDay();
+  const daysUntilFriday = (5 - day + 7) % 7 || 7;
+  const next = new Date(now);
+  next.setDate(now.getDate() + daysUntilFriday);
+  next.setHours(20, 0, 0, 0);
+  return next;
+}
+
+function getTimeLeft(target: Date) {
+  const diff = Math.max(0, target.getTime() - Date.now());
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  const minutes = Math.floor((diff / (1000 * 60)) % 60);
+  const seconds = Math.floor((diff / 1000) % 60);
+  return { days, hours, minutes, seconds };
+}
 
 const Home = () => {
   const navigate = useNavigate();
