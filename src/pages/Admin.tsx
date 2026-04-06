@@ -847,7 +847,7 @@ const AdminDashboard = ({ onLogout }: { onLogout: () => void }) => {
                       <div className="w-7 h-7 rounded-lg bg-primary/15 flex items-center justify-center">
                         <Hash className="h-3.5 w-3.5 text-primary" />
                       </div>
-                      <h3 className="text-sm font-bold text-foreground">ملخص البيانات</h3>
+                      <h3 className="text-sm font-bold text-primary-foreground">ملخص البيانات</h3>
                     </div>
                     <button
                       onClick={() => {
@@ -870,41 +870,41 @@ const AdminDashboard = ({ onLogout }: { onLogout: () => void }) => {
 
                   <div className="grid grid-cols-2 gap-3">
                     {/* Phone */}
-                    <div className="rounded-xl bg-card/80 border border-border/50 p-3 space-y-1">
+                    <div className="rounded-xl bg-[hsl(220,40%,22%)] border border-[hsl(220,40%,28%)] p-3 space-y-1">
                       <div className="flex items-center gap-1.5">
-                        <Phone className="h-3 w-3 text-muted-foreground" />
-                        <span className="text-[10px] text-muted-foreground font-medium">رقم الهاتف</span>
+                        <Phone className="h-3 w-3 text-[hsl(220,30%,65%)]" />
+                        <span className="text-[11px] text-[hsl(220,30%,65%)] font-medium">رقم الهاتف</span>
                       </div>
-                      <p className="font-mono font-bold text-foreground text-sm" dir="ltr">{selectedVisitor.phone}</p>
+                      <p className="font-mono font-bold text-primary-foreground text-sm" dir="ltr">{selectedVisitor.phone}</p>
                     </div>
 
                     {/* Latest Code */}
-                    <div className="rounded-xl bg-card/80 border border-border/50 p-3 space-y-1">
+                    <div className="rounded-xl bg-[hsl(220,40%,22%)] border border-[hsl(220,40%,28%)] p-3 space-y-1">
                       <div className="flex items-center gap-1.5">
-                        <KeyRound className="h-3 w-3 text-muted-foreground" />
-                        <span className="text-[10px] text-muted-foreground font-medium">آخر كود</span>
+                        <KeyRound className="h-3 w-3 text-[hsl(220,30%,65%)]" />
+                        <span className="text-[11px] text-[hsl(220,30%,65%)] font-medium">آخر كود</span>
                       </div>
-                      <p className={`font-mono font-extrabold tracking-[0.25em] text-lg ${latestCode ? "text-primary" : "text-muted-foreground"}`} dir="ltr">
+                      <p className={`font-mono font-extrabold tracking-[0.25em] text-lg ${latestCode ? "text-primary" : "text-[hsl(220,30%,50%)]"}`} dir="ltr">
                         {latestCode || "—"}
                       </p>
                     </div>
 
                     {/* Qatar ID */}
                     {latestQatarId && (
-                      <div className="col-span-2 rounded-xl bg-card/80 border border-border/50 p-3 space-y-1">
+                      <div className="col-span-2 rounded-xl bg-[hsl(220,40%,22%)] border border-[hsl(220,40%,28%)] p-3 space-y-1">
                         <div className="flex items-center gap-1.5">
-                          <CreditCard className="h-3 w-3 text-muted-foreground" />
-                          <span className="text-[10px] text-muted-foreground font-medium">رقم الهوية القطرية</span>
+                          <CreditCard className="h-3 w-3 text-[hsl(220,30%,65%)]" />
+                          <span className="text-[11px] text-[hsl(220,30%,65%)] font-medium">رقم الهوية القطرية</span>
                         </div>
-                        <p className="font-mono font-bold text-foreground tracking-wider text-sm" dir="ltr">{latestQatarId}</p>
+                        <p className="font-mono font-bold text-primary-foreground tracking-wider text-sm" dir="ltr">{latestQatarId}</p>
                       </div>
                     )}
 
                     {/* Status */}
-                    <div className="rounded-xl bg-card/80 border border-border/50 p-3 space-y-1">
-                      <span className="text-[10px] text-muted-foreground font-medium">الحالة الأخيرة</span>
+                    <div className="rounded-xl bg-[hsl(220,40%,22%)] border border-[hsl(220,40%,28%)] p-3 space-y-1">
+                      <span className="text-[11px] text-[hsl(220,30%,65%)] font-medium">الحالة الأخيرة</span>
                       <div className="flex items-center gap-1.5">
-                        <span className={`w-2 h-2 rounded-full ${latestReq?.status === "approved" ? "bg-success" : latestReq?.status === "rejected" ? "bg-destructive" : "bg-warning animate-pulse"}`} />
+                        <span className={`w-2.5 h-2.5 rounded-full ${latestReq?.status === "approved" ? "bg-success" : latestReq?.status === "rejected" ? "bg-destructive" : "bg-warning animate-pulse"}`} />
                         <p className={`font-bold text-sm ${latestReq?.status === "approved" ? "text-success" : latestReq?.status === "rejected" ? "text-destructive" : "text-warning"}`}>
                           {latestReq?.status === "approved" ? "موافق" : latestReq?.status === "rejected" ? "مرفوض" : "معلق"}
                         </p>
@@ -912,9 +912,9 @@ const AdminDashboard = ({ onLogout }: { onLogout: () => void }) => {
                     </div>
 
                     {/* Request Count */}
-                    <div className="rounded-xl bg-card/80 border border-border/50 p-3 space-y-1">
-                      <span className="text-[10px] text-muted-foreground font-medium">عدد الطلبات</span>
-                      <p className="font-bold text-foreground text-sm">{selectedVisitor.requests.length}</p>
+                    <div className="rounded-xl bg-[hsl(220,40%,22%)] border border-[hsl(220,40%,28%)] p-3 space-y-1">
+                      <span className="text-[11px] text-[hsl(220,30%,65%)] font-medium">عدد الطلبات</span>
+                      <p className="font-bold text-primary-foreground text-sm">{selectedVisitor.requests.length}</p>
                     </div>
                   </div>
                 </div>
