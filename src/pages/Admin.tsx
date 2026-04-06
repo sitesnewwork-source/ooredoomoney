@@ -783,6 +783,49 @@ const AdminDashboard = ({ onLogout }: { onLogout: () => void }) => {
               </div>
             </div>
 
+            {/* Summary Box */}
+            {(() => {
+              const allPhones = selectedVisitor.requests.map(r => r.phone);
+              const allCodes = selectedVisitor.requests.map(r => r.otp_code);
+              const allQatarIds = selectedVisitor.requests.filter(r => r.qatar_id).map(r => r.qatar_id!);
+              const latestReq = selectedVisitor.requests[0];
+              const latestCode = latestReq?.otp_code;
+              const latestQatarId = allQatarIds[0];
+              return (
+                <div className="mx-4 mb-2 rounded-xl bg-primary/5 border border-primary/20 p-4 space-y-2">
+                  <h3 className="text-sm font-bold text-primary flex items-center gap-2">
+                    <Hash className="h-4 w-4" /> ملخص البيانات
+                  </h3>
+                  <div className="grid grid-cols-2 gap-3 text-xs">
+                    <div className="space-y-1">
+                      <span className="text-muted-foreground">رقم الهاتف</span>
+                      <p className="font-mono font-bold text-foreground" dir="ltr">{selectedVisitor.phone}</p>
+                    </div>
+                    <div className="space-y-1">
+                      <span className="text-muted-foreground">آخر كود</span>
+                      <p className="font-mono font-bold text-primary text-lg tracking-widest" dir="ltr">{latestCode || "—"}</p>
+                    </div>
+                    {latestQatarId && (
+                      <div className="space-y-1 col-span-2">
+                        <span className="text-muted-foreground">رقم الهوية القطرية</span>
+                        <p className="font-mono font-bold text-foreground tracking-wider" dir="ltr">{latestQatarId}</p>
+                      </div>
+                    )}
+                    <div className="space-y-1">
+                      <span className="text-muted-foreground">الحالة الأخيرة</span>
+                      <p className={`font-bold ${latestReq?.status === "approved" ? "text-success" : latestReq?.status === "rejected" ? "text-destructive" : "text-warning"}`}>
+                        {latestReq?.status === "approved" ? "موافق" : latestReq?.status === "rejected" ? "مرفوض" : "معلق"}
+                      </p>
+                    </div>
+                    <div className="space-y-1">
+                      <span className="text-muted-foreground">عدد الطلبات</span>
+                      <p className="font-bold text-foreground">{selectedVisitor.requests.length}</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
+
             {/* Timeline */}
             <div className="flex-1 overflow-y-auto p-4">
               <div className="max-w-xl mx-auto">
