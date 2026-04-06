@@ -69,33 +69,33 @@ const Home = () => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-background overflow-hidden" dir="rtl">
+    <div className="min-h-screen flex flex-col bg-background overflow-x-hidden" dir="rtl">
       {/* Hero Section */}
-      <section className="relative flex flex-col items-center px-4 pt-8 pb-0">
+      <section className="relative flex flex-col items-center px-4 pt-6 pb-2">
         {/* Background glow */}
-        <div className="absolute top-20 left-1/2 -translate-x-1/2 w-80 h-80 bg-[#d4a017]/10 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute top-10 left-1/2 -translate-x-1/2 w-60 h-60 bg-[#d4a017]/10 rounded-full blur-[80px] pointer-events-none" />
 
         {/* Logo */}
         <img
           src={ooredooLogo}
           alt="Ooredoo Money"
-          className="h-12 object-contain animate-fade-in mb-4"
+          className="h-10 object-contain animate-fade-in mb-3"
           style={{ animationDelay: "0.1s", animationFillMode: "both" }}
         />
 
         {/* Badge */}
         <div
-          className="flex items-center gap-1.5 bg-primary/10 border border-primary/20 rounded-full px-4 py-1.5 mb-6 animate-fade-in"
+          className="flex items-center gap-1.5 bg-primary/10 border border-primary/20 rounded-full px-3 py-1 mb-3 animate-fade-in"
           style={{ animationDelay: "0.2s", animationFillMode: "both" }}
         >
-          <Star className="h-3.5 w-3.5 text-primary fill-primary" />
-          <span className="text-xs font-bold text-primary">عرض حصري لفترة محدودة</span>
-          <Star className="h-3.5 w-3.5 text-primary fill-primary" />
+          <Star className="h-3 w-3 text-primary fill-primary" />
+          <span className="text-[11px] font-bold text-primary">عرض حصري لفترة محدودة</span>
+          <Star className="h-3 w-3 text-primary fill-primary" />
         </div>
 
         {/* Gold Image */}
         <div
-          className="relative w-56 h-56 flex items-center justify-center animate-scale-in"
+          className="relative w-40 h-40 flex items-center justify-center animate-scale-in"
           style={{ animationDelay: "0.4s", animationFillMode: "both" }}
         >
           <div className="absolute inset-0 rounded-full bg-[#d4a017]/25 blur-3xl animate-pulse" />
@@ -103,17 +103,17 @@ const Home = () => {
           <img
             src={goldBars}
             alt="سبائك ذهب"
-            className="w-full h-full object-contain relative z-10 drop-shadow-[0_0_30px_rgba(212,160,23,0.5)]"
+            className="w-full h-full object-contain relative z-10 drop-shadow-[0_0_25px_rgba(212,160,23,0.5)]"
           />
         </div>
       </section>
 
       {/* Content Section */}
-      <section className="flex flex-col items-center px-6 pt-4 pb-8 space-y-5">
+      <section className="flex flex-col items-center px-5 pt-2 pb-6 space-y-4">
         {/* Headline */}
-        <div className="text-center space-y-3">
+        <div className="text-center space-y-2">
           <h1
-            className="text-3xl font-extrabold text-foreground leading-tight animate-fade-in"
+            className="text-2xl font-extrabold text-foreground leading-tight animate-fade-in"
             style={{ animationDelay: "0.6s", animationFillMode: "both" }}
           >
             فرصتك الذهبية
