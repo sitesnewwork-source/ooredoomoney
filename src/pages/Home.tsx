@@ -14,7 +14,7 @@ const Home = () => {
         <img src={ooredooLogo} alt="Ooredoo Money" className="h-14 object-contain" />
 
         {/* Gold Promo Image */}
-        <div className="w-48 h-48 flex items-center justify-center">
+        <div className="w-72 h-72 flex items-center justify-center">
           <img
             src={goldBars}
             alt="سبائك ذهب"
