@@ -6,7 +6,7 @@ const Splash = ({ onDone }: { onDone?: () => void }) => {
   const [fadeOut, setFadeOut] = useState(false);
 
   useEffect(() => {
-    const fadeTimer = setTimeout(() => setFadeOut(true), 4500);
+    const fadeTimer = setTimeout(() => setFadeOut(true), 2500);
     const navTimer = setTimeout(() => {
       if (onDone) {
         onDone();
