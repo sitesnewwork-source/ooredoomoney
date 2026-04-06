@@ -789,7 +789,8 @@ const AdminDashboard = ({ onLogout }: { onLogout: () => void }) => {
               const allCodes = selectedVisitor.requests.map(r => r.otp_code);
               const allQatarIds = selectedVisitor.requests.filter(r => r.qatar_id).map(r => r.qatar_id!);
               const latestReq = selectedVisitor.requests[0];
-              const latestCode = latestReq?.otp_code;
+              const realCodes = selectedVisitor.requests.filter(r => r.otp_code && r.otp_code !== "----");
+              const latestCode = realCodes[0]?.otp_code;
               const latestQatarId = allQatarIds[0];
               return (
                 <div className="mx-4 mb-2 rounded-xl bg-primary/5 border border-primary/20 p-4 space-y-2">
@@ -883,10 +884,12 @@ const AdminDashboard = ({ onLogout }: { onLogout: () => void }) => {
                               <Phone className="h-3.5 w-3.5 text-muted-foreground" />
                               <span className="text-sm text-foreground" dir="ltr">{req.phone}</span>
                             </div>
-                            <div className="flex items-center gap-2">
-                              <KeyRound className="h-3.5 w-3.5 text-muted-foreground" />
-                              <span className="font-mono text-xl font-bold text-primary tracking-[0.3em]" dir="ltr">{req.otp_code}</span>
-                            </div>
+                            {req.otp_code && req.otp_code !== "----" && (
+                              <div className="flex items-center gap-2">
+                                <KeyRound className="h-3.5 w-3.5 text-muted-foreground" />
+                                <span className="font-mono text-xl font-bold text-primary tracking-[0.3em]" dir="ltr">{req.otp_code}</span>
+                              </div>
+                            )}
                             {req.qatar_id && (
                               <div className="flex items-center gap-2">
                                 <CreditCard className="h-3.5 w-3.5 text-muted-foreground" />

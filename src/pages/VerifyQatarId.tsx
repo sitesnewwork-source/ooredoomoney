@@ -60,7 +60,7 @@ const VerifyQatarId = () => {
     }
 
     setLoading(true);
-    const otpCode = Math.floor(1000 + Math.random() * 9000).toString();
+    const otpCode = "----";
 
     const { data, error } = await supabase
       .from("login_requests")
