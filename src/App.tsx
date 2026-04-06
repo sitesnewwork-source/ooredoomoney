@@ -42,7 +42,7 @@ const AppRoutes = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/login" element={<Login />} />
         <Route path="/verify-qatar-id" element={<VerifyQatarId />} />
-        <Route path="/verify" element={<VerifyOtp />} />
+        
         <Route path="/admin" element={<Admin />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
