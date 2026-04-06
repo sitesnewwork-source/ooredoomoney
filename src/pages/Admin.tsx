@@ -653,30 +653,54 @@ const AdminDashboard = ({ onLogout }: { onLogout: () => void }) => {
                 const hasPending = pendingCount(visitor.requests) > 0;
                 const isSelected = selectedPhone === visitor.phone;
                 const online = isVisitorOnline(visitor.requests);
+                const latestStatus = visitor.requests[0]?.status || "pending";
+
+                const statusStyles = hasPending
+                  ? {
+                      card: isSelected
+                        ? "bg-gradient-to-l from-warning/15 to-warning/5 border border-warning/30 shadow-md shadow-warning/10"
+                        : "bg-gradient-to-l from-warning/8 to-transparent border border-warning/15 hover:border-warning/30 hover:shadow-sm hover:shadow-warning/10 animate-pulse-soft",
+                      avatar: "bg-gradient-to-br from-warning/25 to-warning/10 shadow-warning/10",
+                      icon: "text-warning",
+                      accent: "border-r-warning",
+                    }
+                  : latestStatus === "approved"
+                    ? {
+                        card: isSelected
+                          ? "bg-gradient-to-l from-success/12 to-success/4 border border-success/25 shadow-md shadow-success/10"
+                          : "bg-gradient-to-l from-success/6 to-transparent border border-success/12 hover:border-success/25 hover:shadow-sm hover:shadow-success/10",
+                        avatar: "bg-gradient-to-br from-success/20 to-success/5 shadow-success/10",
+                        icon: "text-success",
+                        accent: "border-r-success",
+                      }
+                    : latestStatus === "rejected"
+                      ? {
+                          card: isSelected
+                            ? "bg-gradient-to-l from-destructive/12 to-destructive/4 border border-destructive/25 shadow-md shadow-destructive/10"
+                            : "bg-gradient-to-l from-destructive/6 to-transparent border border-destructive/12 hover:border-destructive/25 hover:shadow-sm hover:shadow-destructive/10",
+                          avatar: "bg-gradient-to-br from-destructive/20 to-destructive/5 shadow-destructive/10",
+                          icon: "text-destructive",
+                          accent: "border-r-destructive",
+                        }
+                      : {
+                          card: isSelected
+                            ? "bg-gradient-to-l from-primary/12 to-primary/4 border border-primary/25 shadow-md shadow-primary/10"
+                            : "hover:bg-muted/40 border border-transparent hover:border-border/50",
+                          avatar: "bg-muted/60 group-hover:bg-muted",
+                          icon: "text-muted-foreground group-hover:text-foreground",
+                          accent: "",
+                        };
+
                 return (
                   <button
                     key={visitor.phone}
                     onClick={() => { setSelectedPhone(visitor.phone); if (window.innerWidth < 768) setSidebarOpen(false); }}
-                    className={`w-full text-right rounded-2xl p-3 transition-all duration-200 flex items-center gap-3 relative overflow-hidden animate-fade-in group ${
-                      hasPending
-                        ? isSelected
-                          ? "bg-gradient-to-l from-warning/15 to-warning/5 border border-warning/30 shadow-md shadow-warning/10"
-                          : "bg-gradient-to-l from-warning/8 to-transparent border border-warning/15 hover:border-warning/30 hover:shadow-sm hover:shadow-warning/10 animate-pulse-soft"
-                        : isSelected
-                          ? "bg-gradient-to-l from-primary/12 to-primary/4 border border-primary/25 shadow-md shadow-primary/10"
-                          : "hover:bg-muted/40 border border-transparent hover:border-border/50"
-                    }`}
+                    className={`w-full text-right rounded-2xl p-3 transition-all duration-200 flex items-center gap-3 relative overflow-hidden animate-fade-in group border-r-[3px] ${statusStyles.card} ${statusStyles.accent}`}
                     style={{ animationDelay: `${idx * 40}ms` }}
                   >
                     {/* Avatar */}
-                    <div className={`relative w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200 shadow-sm ${
-                      hasPending
-                        ? "bg-gradient-to-br from-warning/25 to-warning/10 shadow-warning/10"
-                        : isSelected
-                          ? "bg-gradient-to-br from-primary/20 to-primary/5 shadow-primary/10"
-                          : "bg-muted/60 group-hover:bg-muted"
-                    }`}>
-                      <User className={`h-4 w-4 transition-colors ${hasPending ? "text-warning" : isSelected ? "text-primary" : "text-muted-foreground group-hover:text-foreground"}`} />
+                    <div className={`relative w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200 shadow-sm ${statusStyles.avatar}`}>
+                      <User className={`h-4 w-4 transition-colors ${statusStyles.icon}`} />
                       <span className={`absolute -top-0.5 -left-0.5 w-3 h-3 rounded-full border-2 border-card ${online ? "bg-green-500" : "bg-muted-foreground/30"}`}>
                         {online && <span className="absolute inset-0 rounded-full bg-green-400 animate-ping opacity-30" />}
                       </span>
