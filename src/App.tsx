@@ -41,6 +41,7 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
 }
 
 const AppRoutes = () => {
+  const location = useLocation();
   const [splashDone, setSplashDone] = useState(() => {
     return sessionStorage.getItem("splashShown") === "true";
   });
