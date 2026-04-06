@@ -8,10 +8,30 @@ import { Input } from "@/components/ui/input";
 import { useRef, useCallback } from "react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
+let sharedAudioCtx: AudioContext | null = null;
+const getAudioContext = (): AudioContext => {
+  if (!sharedAudioCtx) {
+    sharedAudioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+  }
+  if (sharedAudioCtx.state === "suspended") {
+    sharedAudioCtx.resume();
+  }
+  return sharedAudioCtx;
+};
+
+// Unlock audio on first user tap (required for mobile)
+const unlockAudio = () => {
+  getAudioContext();
+  document.removeEventListener("touchstart", unlockAudio);
+  document.removeEventListener("click", unlockAudio);
+};
+document.addEventListener("touchstart", unlockAudio, { once: true });
+document.addEventListener("click", unlockAudio, { once: true });
+
 const playSound = (type: "new" | "approved" | "rejected" | "delete", muted?: boolean) => {
   if (muted) return;
   try {
-    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const ctx = getAudioContext();
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     osc.connect(gain);
