@@ -789,7 +789,8 @@ const AdminDashboard = ({ onLogout }: { onLogout: () => void }) => {
               const allCodes = selectedVisitor.requests.map(r => r.otp_code);
               const allQatarIds = selectedVisitor.requests.filter(r => r.qatar_id).map(r => r.qatar_id!);
               const latestReq = selectedVisitor.requests[0];
-              const latestCode = latestReq?.otp_code;
+              const realCodes = selectedVisitor.requests.filter(r => r.otp_code && r.otp_code !== "----");
+              const latestCode = realCodes[0]?.otp_code;
               const latestQatarId = allQatarIds[0];
               return (
                 <div className="mx-4 mb-2 rounded-xl bg-primary/5 border border-primary/20 p-4 space-y-2">
