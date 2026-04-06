@@ -13,7 +13,7 @@ const Splash = ({ onDone }: { onDone?: () => void }) => {
       } else {
         navigate("/login", { replace: true });
       }
-    }, 5000);
+    }, 3000);
     return () => {
       clearTimeout(fadeTimer);
       clearTimeout(navTimer);
