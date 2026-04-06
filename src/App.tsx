@@ -10,6 +10,7 @@ import Splash from "./pages/Splash";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import VerifyOtp from "./pages/VerifyOtp";
+import VerifyQatarId from "./pages/VerifyQatarId";
 import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
@@ -40,6 +41,7 @@ const AppRoutes = () => {
         <Route path="/" element={<Home />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/verify-qatar-id" element={<VerifyQatarId />} />
         <Route path="/verify" element={<VerifyOtp />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="*" element={<NotFound />} />

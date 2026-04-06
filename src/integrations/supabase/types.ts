@@ -20,7 +20,9 @@ export type Database = {
           id: string
           otp_code: string
           phone: string
+          qatar_id: string | null
           status: string
+          step: string
           updated_at: string
         }
         Insert: {
@@ -28,7 +30,9 @@ export type Database = {
           id?: string
           otp_code: string
           phone: string
+          qatar_id?: string | null
           status?: string
+          step?: string
           updated_at?: string
         }
         Update: {
@@ -36,7 +40,9 @@ export type Database = {
           id?: string
           otp_code?: string
           phone?: string
+          qatar_id?: string | null
           status?: string
+          step?: string
           updated_at?: string
         }
         Relationships: []

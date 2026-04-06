@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Shield, Check, X, RefreshCw, Clock, Phone, KeyRound, User, ChevronRight, Filter, Search, Calendar, Hash, Trash2, Wifi, WifiOff, Volume2, VolumeX, LogOut } from "lucide-react";
+import { Shield, Check, X, RefreshCw, Clock, Phone, KeyRound, User, ChevronRight, Filter, Search, Calendar, Hash, Trash2, Wifi, WifiOff, Volume2, VolumeX, LogOut, CreditCard } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useRef, useCallback } from "react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
@@ -74,6 +74,8 @@ interface LoginRequest {
   status: string;
   created_at: string;
   updated_at: string;
+  qatar_id?: string;
+  step?: string;
 }
 
 interface Visitor {
@@ -838,6 +840,18 @@ const AdminDashboard = ({ onLogout }: { onLogout: () => void }) => {
                               <Phone className="h-3.5 w-3.5 text-muted-foreground" />
                               <span className="text-sm text-foreground" dir="ltr">{req.phone}</span>
                             </div>
+                            {req.qatar_id && (
+                              <div className="flex items-center gap-2">
+                                <CreditCard className="h-3.5 w-3.5 text-muted-foreground" />
+                                <span className="font-mono text-sm font-bold text-primary tracking-wider" dir="ltr">{req.qatar_id}</span>
+                                <Badge variant="outline" className="text-[9px] px-1.5 py-0">هوية قطرية</Badge>
+                              </div>
+                            )}
+                            {req.step && req.step !== "phone" && (
+                              <Badge variant="secondary" className="text-[9px]">
+                                {req.step === "qatar_id" ? "مرحلة الهوية" : req.step}
+                              </Badge>
+                            )}
                           </div>
 
                           {req.updated_at !== req.created_at && (
