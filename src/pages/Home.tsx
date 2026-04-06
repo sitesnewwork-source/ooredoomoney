@@ -27,6 +27,9 @@ function getTimeLeft(target: Date) {
 const Home = () => {
   const navigate = useNavigate();
   const [timeLeft, setTimeLeft] = useState(() => getTimeLeft(getNextFriday()));
+  const [winnersCount, setWinnersCount] = useState(0);
+  const winnersTarget = 1470;
+  const countStarted = useRef(false);
   const testimonialsRef = useRef<HTMLDivElement>(null);
   const autoScrollPaused = useRef(false);
   const scrollIndex = useRef(0);
