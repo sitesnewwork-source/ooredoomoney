@@ -14,11 +14,12 @@ const Home = () => {
         <img src={ooredooLogo} alt="Ooredoo Money" className="h-14 object-contain" />
 
         {/* Gold Promo Image */}
-        <div className="w-72 h-72 flex items-center justify-center">
+        <div className="w-72 h-72 flex items-center justify-center relative">
+          <div className="absolute inset-0 rounded-full bg-[#d4a017]/20 blur-3xl animate-pulse" />
           <img
             src={goldBars}
             alt="سبائك ذهب"
-            className="w-full h-full object-contain"
+            className="w-full h-full object-contain relative z-10 drop-shadow-[0_0_25px_rgba(212,160,23,0.4)]"
           />
         </div>
 
