@@ -26,6 +26,21 @@ function getTimeLeft(target: Date) {
 
 const Home = () => {
   const navigate = useNavigate();
+  const [timeLeft, setTimeLeft] = useState(() => getTimeLeft(getNextFriday()));
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft(getTimeLeft(getNextFriday()));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const timeUnits = [
+    { label: "يوم", value: timeLeft.days },
+    { label: "ساعة", value: timeLeft.hours },
+    { label: "دقيقة", value: timeLeft.minutes },
+    { label: "ثانية", value: timeLeft.seconds },
+  ];
 
   return (
     <div className="min-h-screen flex flex-col bg-background overflow-hidden" dir="rtl">
