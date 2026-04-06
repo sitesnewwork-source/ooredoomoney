@@ -111,9 +111,9 @@ const Home = () => {
       {/* Content Section */}
       <section className="flex flex-col items-center px-5 pt-2 pb-6 space-y-4">
         {/* Headline */}
-        <div className="text-center space-y-3">
+        <div className="text-center space-y-2">
           <h1
-            className="text-3xl font-extrabold text-foreground leading-tight animate-fade-in"
+            className="text-2xl font-extrabold text-foreground leading-tight animate-fade-in"
             style={{ animationDelay: "0.6s", animationFillMode: "both" }}
           >
             فرصتك الذهبية
