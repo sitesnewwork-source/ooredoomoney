@@ -51,6 +51,25 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
+    if (countStarted.current) return;
+    countStarted.current = true;
+    const duration = 2000;
+    const steps = 60;
+    const increment = winnersTarget / steps;
+    let current = 0;
+    const interval = setInterval(() => {
+      current += increment;
+      if (current >= winnersTarget) {
+        setWinnersCount(winnersTarget);
+        clearInterval(interval);
+      } else {
+        setWinnersCount(Math.floor(current));
+      }
+    }, duration / steps);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
     const interval = setInterval(() => {
       if (autoScrollPaused.current || !testimonialsRef.current) return;
       const container = testimonialsRef.current;
