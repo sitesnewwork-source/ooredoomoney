@@ -215,14 +215,12 @@ const Home = () => {
             onPointerUp={() => { autoScrollPaused.current = false; }}
           >
             {testimonials.map((t) => (
-              <div key={t.name} className="glass-card rounded-2xl p-4 flex gap-3 items-start min-w-[280px] snap-start shrink-0">
+              <div key={t.name} className="glass-card rounded-2xl p-4 flex flex-col items-center justify-center gap-2 min-w-[160px] w-[160px] h-[160px] snap-start shrink-0 text-center">
                 <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-lg shrink-0">
                   {t.emoji}
                 </div>
-                <div className="space-y-1 flex-1">
-                  <span className="text-sm font-bold text-foreground">{t.name}</span>
-                  <p className="text-xs text-muted-foreground leading-relaxed">{t.text}</p>
-                </div>
+                <span className="text-sm font-bold text-foreground">{t.name}</span>
+                <p className="text-[10px] text-muted-foreground leading-relaxed line-clamp-3">{t.text}</p>
               </div>
             ))}
           </div>
