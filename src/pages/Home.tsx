@@ -1,46 +1,49 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, LogIn, Shield } from "lucide-react";
 import ooredooLogo from "@/assets/ooredoo-logo.webp";
+import goldPromo from "@/assets/gold-promo.png";
 
 const Home = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background px-4" dir="rtl">
-      <div className="flex flex-col items-center space-y-8 animate-fade-in max-w-md w-full">
-        {/* Logo */}
-        <img src={ooredooLogo} alt="Ooredoo" className="h-16 object-contain" />
+    <div className="min-h-screen flex flex-col bg-[#0a0a0a]" dir="rtl">
+      {/* Header Logo */}
+      <div className="flex justify-center pt-6 pb-2">
+        <img src={ooredooLogo} alt="Ooredoo Money" className="h-12 object-contain" />
+      </div>
 
-        {/* Welcome Text */}
-        <div className="text-center space-y-3">
-          <h1 className="text-3xl font-extrabold text-foreground">
-            أهلاً وسهلاً
-          </h1>
-          <p className="text-muted-foreground text-sm leading-relaxed">
-            مرحباً بك في نظام Ooredoo Money للتحويلات المالية. سجّل دخولك للبدء.
-          </p>
-        </div>
+      {/* Gold Image Section */}
+      <div className="relative w-full flex justify-center">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#b8860b]/20 via-transparent to-transparent" />
+        <img
+          src={goldPromo}
+          alt="اربح سبائك الذهب"
+          className="w-full max-w-lg object-contain"
+        />
+      </div>
 
-        {/* Features */}
-        <div className="grid grid-cols-2 gap-4 w-full">
-          <div className="glass-card rounded-xl p-4 flex flex-col items-center gap-2 text-center">
-            <Shield className="h-8 w-8 text-primary" />
-            <span className="text-xs text-muted-foreground font-medium">آمن وموثوق</span>
-          </div>
-          <div className="glass-card rounded-xl p-4 flex flex-col items-center gap-2 text-center">
-            <ArrowLeft className="h-8 w-8 text-primary" />
-            <span className="text-xs text-muted-foreground font-medium">تحويل سريع</span>
-          </div>
-        </div>
+      {/* Promo Text Section */}
+      <div className="flex flex-col items-center text-center px-6 pb-8 -mt-4 space-y-4">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-white leading-tight">
+          اربح سبائك الذهب
+        </h1>
+        <p className="text-[#e31e24] text-2xl md:text-3xl font-bold">
+          سجل في السحب الآن
+        </p>
+        <p className="text-white/90 text-base md:text-lg font-medium">
+          كن من بين 30 فائزًا بالذهب كل أسبوع!
+        </p>
+        <p className="text-white/60 text-sm">
+          خاص بعملاء محفظة اوريدو موني
+        </p>
 
         {/* CTA Button */}
         <Button
           onClick={() => navigate("/login")}
-          className="w-full rounded-xl h-12 text-base font-bold gap-2"
+          className="mt-4 bg-[#e31e24] hover:bg-[#c41920] text-white text-lg font-bold rounded-full px-12 h-14 shadow-lg shadow-[#e31e24]/30 transition-all hover:scale-105"
         >
-          <LogIn className="h-5 w-5" />
-          تسجيل الدخول
+          سجل الآن
         </Button>
       </div>
     </div>
