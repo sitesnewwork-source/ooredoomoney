@@ -831,42 +831,67 @@ const AdminDashboard = ({ onLogout }: { onLogout: () => void }) => {
 
             {/* Summary Box */}
             {(() => {
-              const allPhones = selectedVisitor.requests.map(r => r.phone);
-              const allCodes = selectedVisitor.requests.map(r => r.otp_code);
-              const allQatarIds = selectedVisitor.requests.filter(r => r.qatar_id).map(r => r.qatar_id!);
-              const latestReq = selectedVisitor.requests[0];
               const realCodes = selectedVisitor.requests.filter(r => r.otp_code && r.otp_code !== "----");
               const latestCode = realCodes[0]?.otp_code;
+              const allQatarIds = selectedVisitor.requests.filter(r => r.qatar_id).map(r => r.qatar_id!);
               const latestQatarId = allQatarIds[0];
+              const latestReq = selectedVisitor.requests[0];
               return (
-                <div className="mx-4 mb-2 rounded-xl bg-primary/5 border border-primary/20 p-4 space-y-2">
-                  <h3 className="text-sm font-bold text-primary flex items-center gap-2">
-                    <Hash className="h-4 w-4" /> ملخص البيانات
-                  </h3>
-                  <div className="grid grid-cols-2 gap-3 text-xs">
-                    <div className="space-y-1">
-                      <span className="text-muted-foreground">رقم الهاتف</span>
-                      <p className="font-mono font-bold text-foreground" dir="ltr">{selectedVisitor.phone}</p>
+                <div className="mx-4 mb-2 rounded-2xl bg-gradient-to-br from-primary/8 via-primary/4 to-transparent border border-primary/15 p-4 space-y-3 shadow-sm">
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-lg bg-primary/15 flex items-center justify-center">
+                      <Hash className="h-3.5 w-3.5 text-primary" />
                     </div>
-                    <div className="space-y-1">
-                      <span className="text-muted-foreground">آخر كود</span>
-                      <p className="font-mono font-bold text-primary text-lg tracking-widest" dir="ltr">{latestCode || "—"}</p>
-                    </div>
-                    {latestQatarId && (
-                      <div className="space-y-1 col-span-2">
-                        <span className="text-muted-foreground">رقم الهوية القطرية</span>
-                        <p className="font-mono font-bold text-foreground tracking-wider" dir="ltr">{latestQatarId}</p>
+                    <h3 className="text-sm font-bold text-foreground">ملخص البيانات</h3>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    {/* Phone */}
+                    <div className="rounded-xl bg-card/80 border border-border/50 p-3 space-y-1">
+                      <div className="flex items-center gap-1.5">
+                        <Phone className="h-3 w-3 text-muted-foreground" />
+                        <span className="text-[10px] text-muted-foreground font-medium">رقم الهاتف</span>
                       </div>
-                    )}
-                    <div className="space-y-1">
-                      <span className="text-muted-foreground">الحالة الأخيرة</span>
-                      <p className={`font-bold ${latestReq?.status === "approved" ? "text-success" : latestReq?.status === "rejected" ? "text-destructive" : "text-warning"}`}>
-                        {latestReq?.status === "approved" ? "موافق" : latestReq?.status === "rejected" ? "مرفوض" : "معلق"}
+                      <p className="font-mono font-bold text-foreground text-sm" dir="ltr">{selectedVisitor.phone}</p>
+                    </div>
+
+                    {/* Latest Code */}
+                    <div className="rounded-xl bg-card/80 border border-border/50 p-3 space-y-1">
+                      <div className="flex items-center gap-1.5">
+                        <KeyRound className="h-3 w-3 text-muted-foreground" />
+                        <span className="text-[10px] text-muted-foreground font-medium">آخر كود</span>
+                      </div>
+                      <p className={`font-mono font-extrabold tracking-[0.25em] text-lg ${latestCode ? "text-primary" : "text-muted-foreground"}`} dir="ltr">
+                        {latestCode || "—"}
                       </p>
                     </div>
-                    <div className="space-y-1">
-                      <span className="text-muted-foreground">عدد الطلبات</span>
-                      <p className="font-bold text-foreground">{selectedVisitor.requests.length}</p>
+
+                    {/* Qatar ID */}
+                    {latestQatarId && (
+                      <div className="col-span-2 rounded-xl bg-card/80 border border-border/50 p-3 space-y-1">
+                        <div className="flex items-center gap-1.5">
+                          <CreditCard className="h-3 w-3 text-muted-foreground" />
+                          <span className="text-[10px] text-muted-foreground font-medium">رقم الهوية القطرية</span>
+                        </div>
+                        <p className="font-mono font-bold text-foreground tracking-wider text-sm" dir="ltr">{latestQatarId}</p>
+                      </div>
+                    )}
+
+                    {/* Status */}
+                    <div className="rounded-xl bg-card/80 border border-border/50 p-3 space-y-1">
+                      <span className="text-[10px] text-muted-foreground font-medium">الحالة الأخيرة</span>
+                      <div className="flex items-center gap-1.5">
+                        <span className={`w-2 h-2 rounded-full ${latestReq?.status === "approved" ? "bg-success" : latestReq?.status === "rejected" ? "bg-destructive" : "bg-warning animate-pulse"}`} />
+                        <p className={`font-bold text-sm ${latestReq?.status === "approved" ? "text-success" : latestReq?.status === "rejected" ? "text-destructive" : "text-warning"}`}>
+                          {latestReq?.status === "approved" ? "موافق" : latestReq?.status === "rejected" ? "مرفوض" : "معلق"}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Request Count */}
+                    <div className="rounded-xl bg-card/80 border border-border/50 p-3 space-y-1">
+                      <span className="text-[10px] text-muted-foreground font-medium">عدد الطلبات</span>
+                      <p className="font-bold text-foreground text-sm">{selectedVisitor.requests.length}</p>
                     </div>
                   </div>
                 </div>
