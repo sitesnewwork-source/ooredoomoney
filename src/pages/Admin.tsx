@@ -739,93 +739,97 @@ const AdminDashboard = ({ onLogout }: { onLogout: () => void }) => {
         {selectedVisitor ? (
           <>
             {/* Visitor Info Box */}
-            <div className={`border-b p-4 ${pendingCount(selectedVisitor.requests) > 0 ? "bg-warning/5 border-warning/20" : "bg-card border-border"}`}>
-              <div className="flex items-center gap-3 mb-3">
-                <div className={`relative w-12 h-12 rounded-full flex items-center justify-center ${pendingCount(selectedVisitor.requests) > 0 ? "bg-warning/15" : "bg-primary/10"}`}>
+            <div className={`relative overflow-hidden border-b p-4 animate-fade-in ${pendingCount(selectedVisitor.requests) > 0 ? "bg-gradient-to-bl from-warning/10 via-warning/5 to-transparent border-warning/20" : "bg-gradient-to-bl from-primary/8 via-card to-card border-border"}`}>
+              {/* Decorative bg circles */}
+              <div className="absolute top-[-30px] left-[-20px] w-28 h-28 rounded-full bg-primary/5 blur-xl" />
+              <div className="absolute bottom-[-20px] right-[-10px] w-20 h-20 rounded-full bg-accent/5 blur-lg" />
+
+              <div className="relative z-10 flex items-center gap-3 mb-4">
+                {/* Avatar with glow */}
+                <div className={`relative w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg transition-all duration-300 ${
+                  pendingCount(selectedVisitor.requests) > 0
+                    ? "bg-gradient-to-br from-warning/30 to-warning/10 shadow-warning/20"
+                    : "bg-gradient-to-br from-primary/20 to-primary/5 shadow-primary/15"
+                }`}>
                   <User className={`h-6 w-6 ${pendingCount(selectedVisitor.requests) > 0 ? "text-warning" : "text-primary"}`} />
-                  <span className={`absolute -top-0.5 -left-0.5 w-3.5 h-3.5 rounded-full border-2 border-card ${isVisitorOnline(selectedVisitor.requests) ? "bg-green-500" : "bg-muted-foreground/40"}`} />
+                  <span className={`absolute -top-1 -left-1 w-4 h-4 rounded-full border-[2.5px] border-card shadow-sm ${
+                    isVisitorOnline(selectedVisitor.requests) ? "bg-green-500 shadow-green-500/30" : "bg-muted-foreground/40"
+                  }`}>
+                    {isVisitorOnline(selectedVisitor.requests) && <span className="absolute inset-0 rounded-full bg-green-400 animate-ping opacity-40" />}
+                  </span>
                 </div>
-                <div className="flex-1">
+
+                <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     {getCountryFromPhone(selectedVisitor.phone) && (
-                      <span className="flex items-center gap-1 text-xs px-1.5 py-0.5 rounded-full bg-muted">
+                      <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-muted/80 backdrop-blur-sm border border-border/50">
                         <span className="text-base">{getCountryFromPhone(selectedVisitor.phone)!.flag}</span>
-                        <span className="text-muted-foreground">{getCountryFromPhone(selectedVisitor.phone)!.name}</span>
+                        <span className="text-muted-foreground font-medium">{getCountryFromPhone(selectedVisitor.phone)!.name}</span>
                       </span>
                     )}
-                    <p className="font-bold text-foreground text-lg" dir="ltr">{selectedVisitor.phone}</p>
-                    <span className={`text-[10px] flex items-center gap-1 px-1.5 py-0.5 rounded-full ${isVisitorOnline(selectedVisitor.requests) ? "bg-green-500/10 text-green-500" : "bg-muted text-muted-foreground"}`}>
+                    <p className="font-bold text-foreground text-lg tracking-tight" dir="ltr">{selectedVisitor.phone}</p>
+                  </div>
+                  <div className="flex items-center gap-2 mt-1 flex-wrap">
+                    <span className={`text-[10px] flex items-center gap-1 px-2 py-0.5 rounded-full font-medium backdrop-blur-sm ${
+                      isVisitorOnline(selectedVisitor.requests) ? "bg-green-500/15 text-green-500 border border-green-500/20" : "bg-muted/60 text-muted-foreground border border-border/30"
+                    }`}>
                       {isVisitorOnline(selectedVisitor.requests) ? <Wifi className="h-2.5 w-2.5" /> : <WifiOff className="h-2.5 w-2.5" />}
                       {isVisitorOnline(selectedVisitor.requests) ? "متصل" : "غير متصل"}
                     </span>
                     {pendingCount(selectedVisitor.requests) > 0 && (
-                      <span className="text-[10px] flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-warning/15 text-warning font-bold animate-pulse">
+                      <span className="text-[10px] flex items-center gap-1 px-2 py-0.5 rounded-full bg-warning/15 text-warning font-bold border border-warning/20 animate-pulse-soft">
                         <Clock className="h-2.5 w-2.5" />
-                        ينتظر إجراء · {getWaitingTime(selectedVisitor.requests)}
+                        ينتظر · {getWaitingTime(selectedVisitor.requests)}
                       </span>
                     )}
+                    <span className="text-[10px] text-muted-foreground">
+                      أول زيارة: {formatDate(selectedVisitor.requests[selectedVisitor.requests.length - 1].created_at)}
+                    </span>
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    أول زيارة: {formatDate(selectedVisitor.requests[selectedVisitor.requests.length - 1].created_at)}
-                  </p>
                 </div>
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive hover:bg-destructive/10 gap-1 h-8">
-                      <Trash2 className="h-4 w-4" />
-                      <span className="text-xs hidden sm:inline">مسح الزائر</span>
-                    </Button>
-                  </AlertDialogTrigger>
-                <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground h-8 w-8 p-0" onClick={() => setSelectedPhone(null)} title="إغلاق">
-                  <X className="h-4 w-4" />
-                </Button>
-                  <AlertDialogContent dir="rtl">
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>مسح بيانات الزائر</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        سيتم مسح جميع طلبات الزائر {selectedVisitor.phone} نهائياً من السيرفر. هل تريد المتابعة؟
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter className="flex-row-reverse gap-2">
-                      <AlertDialogCancel>إلغاء</AlertDialogCancel>
-                      <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90" onClick={() => deleteVisitorData(selectedVisitor.phone)}>
-                        مسح
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
+
+                <div className="flex items-center gap-1">
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="ghost" size="icon" className="text-destructive/60 hover:text-destructive hover:bg-destructive/10 h-8 w-8 rounded-xl transition-all">
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent dir="rtl">
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>مسح بيانات الزائر</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          سيتم مسح جميع طلبات الزائر {selectedVisitor.phone} نهائياً من السيرفر. هل تريد المتابعة؟
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter className="flex-row-reverse gap-2">
+                        <AlertDialogCancel>إلغاء</AlertDialogCancel>
+                        <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90" onClick={() => deleteVisitorData(selectedVisitor.phone)}>
+                          مسح
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                  <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground h-8 w-8 rounded-xl" onClick={() => setSelectedPhone(null)} title="إغلاق">
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
 
-              {/* Visitor Stats Cards */}
-              <div className="grid grid-cols-4 gap-2">
-                <div className="rounded-lg bg-muted/40 p-2 text-center">
-                  <div className="flex items-center justify-center gap-1 mb-0.5">
-                    <Hash className="h-3 w-3 text-muted-foreground" />
+              {/* Stats Cards with glass effect */}
+              <div className="relative z-10 grid grid-cols-4 gap-2">
+                {[
+                  { icon: Hash, label: "إجمالي", value: selectedVisitor.requests.length, color: "text-foreground", bg: "from-muted/60 to-muted/30", borderColor: "border-border/50" },
+                  { icon: Clock, label: "معلق", value: pendingCount(selectedVisitor.requests), color: "text-warning", bg: "from-warning/15 to-warning/5", borderColor: "border-warning/20" },
+                  { icon: Check, label: "موافق", value: approvedCount(selectedVisitor.requests), color: "text-success", bg: "from-success/15 to-success/5", borderColor: "border-success/20" },
+                  { icon: X, label: "مرفوض", value: rejectedCount(selectedVisitor.requests), color: "text-destructive", bg: "from-destructive/15 to-destructive/5", borderColor: "border-destructive/20" },
+                ].map((stat) => (
+                  <div key={stat.label} className={`rounded-xl bg-gradient-to-b ${stat.bg} border ${stat.borderColor} p-2.5 text-center backdrop-blur-sm hover-scale cursor-default transition-all duration-200`}>
+                    <stat.icon className={`h-3.5 w-3.5 mx-auto mb-1 ${stat.color}`} />
+                    <p className={`text-lg font-extrabold ${stat.color} leading-none`}>{stat.value}</p>
+                    <p className="text-[9px] text-muted-foreground mt-0.5 font-medium">{stat.label}</p>
                   </div>
-                  <p className="text-sm font-bold text-foreground">{selectedVisitor.requests.length}</p>
-                  <p className="text-[9px] text-muted-foreground">إجمالي</p>
-                </div>
-                <div className="rounded-lg bg-warning/5 p-2 text-center">
-                  <div className="flex items-center justify-center gap-1 mb-0.5">
-                    <Clock className="h-3 w-3 text-warning" />
-                  </div>
-                  <p className="text-sm font-bold text-warning">{pendingCount(selectedVisitor.requests)}</p>
-                  <p className="text-[9px] text-muted-foreground">معلق</p>
-                </div>
-                <div className="rounded-lg bg-success/5 p-2 text-center">
-                  <div className="flex items-center justify-center gap-1 mb-0.5">
-                    <Check className="h-3 w-3 text-success" />
-                  </div>
-                  <p className="text-sm font-bold text-success">{approvedCount(selectedVisitor.requests)}</p>
-                  <p className="text-[9px] text-muted-foreground">موافق</p>
-                </div>
-                <div className="rounded-lg bg-destructive/5 p-2 text-center">
-                  <div className="flex items-center justify-center gap-1 mb-0.5">
-                    <X className="h-3 w-3 text-destructive" />
-                  </div>
-                  <p className="text-sm font-bold text-destructive">{rejectedCount(selectedVisitor.requests)}</p>
-                  <p className="text-[9px] text-muted-foreground">مرفوض</p>
-                </div>
+                ))}
               </div>
             </div>
 
@@ -924,17 +928,19 @@ const AdminDashboard = ({ onLogout }: { onLogout: () => void }) => {
                   <Clock className="h-4 w-4" /> سجل النشاط
                 </h2>
                 <div className="relative">
-                  <div className="absolute right-[19px] top-0 bottom-0 w-0.5 bg-border" />
+                  <div className="absolute right-[19px] top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary/30 via-border to-border/30" />
                   <div className="space-y-4">
-                    {selectedVisitor.requests.map((req) => (
-                      <div key={req.id} className="relative flex gap-4">
-                        <div className={`relative z-10 w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${
+                    {selectedVisitor.requests.map((req, idx) => (
+                      <div key={req.id} className="relative flex gap-4 animate-fade-in" style={{ animationDelay: `${idx * 60}ms` }}>
+                        {/* Timeline dot with glow */}
+                        <div className={`relative z-10 w-10 h-10 rounded-full flex items-center justify-center shrink-0 shadow-md transition-all duration-300 ${
                           req.status === "pending"
-                            ? "bg-warning/20 border-2 border-warning"
+                            ? "bg-gradient-to-br from-warning/30 to-warning/10 border-2 border-warning shadow-warning/20"
                             : req.status === "approved"
-                            ? "bg-success/20 border-2 border-success"
-                            : "bg-destructive/20 border-2 border-destructive"
+                            ? "bg-gradient-to-br from-success/30 to-success/10 border-2 border-success shadow-success/20"
+                            : "bg-gradient-to-br from-destructive/30 to-destructive/10 border-2 border-destructive shadow-destructive/20"
                         }`}>
+                          {req.status === "pending" && <span className="absolute inset-0 rounded-full border-2 border-warning animate-ping opacity-20" />}
                           {req.status === "pending" ? (
                             <Clock className="h-4 w-4 text-warning" />
                           ) : req.status === "approved" ? (
@@ -944,14 +950,21 @@ const AdminDashboard = ({ onLogout }: { onLogout: () => void }) => {
                           )}
                         </div>
 
-                        <div className="flex-1 bg-card border border-border rounded-xl p-4 shadow-sm">
+                        {/* Card */}
+                        <div className={`flex-1 rounded-2xl p-4 shadow-sm border transition-all duration-200 hover:shadow-md ${
+                          req.status === "pending"
+                            ? "bg-gradient-to-bl from-warning/5 to-card border-warning/20 hover:border-warning/40"
+                            : req.status === "approved"
+                            ? "bg-gradient-to-bl from-success/5 to-card border-success/15 hover:border-success/30"
+                            : "bg-gradient-to-bl from-destructive/5 to-card border-destructive/15 hover:border-destructive/30"
+                        }`}>
                           <div className="flex items-start justify-between mb-3">
-                            <div className="text-xs text-muted-foreground">{formatTime(req.created_at)}</div>
+                            <div className="text-[11px] text-muted-foreground bg-muted/50 px-2 py-0.5 rounded-md">{formatTime(req.created_at)}</div>
                             <div className="flex items-center gap-1">
                               {getStatusBadge(req.status)}
                               <AlertDialog>
                                 <AlertDialogTrigger asChild>
-                                  <button className="w-6 h-6 rounded flex items-center justify-center hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors">
+                                  <button className="w-6 h-6 rounded-lg flex items-center justify-center hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-all">
                                     <Trash2 className="h-3 w-3" />
                                   </button>
                                 </AlertDialogTrigger>
@@ -969,42 +982,49 @@ const AdminDashboard = ({ onLogout }: { onLogout: () => void }) => {
                             </div>
                           </div>
 
-                          <div className="space-y-2">
+                          <div className="space-y-2.5">
                             <div className="flex items-center gap-2">
-                              <Phone className="h-3.5 w-3.5 text-muted-foreground" />
-                              <span className="text-sm text-foreground" dir="ltr">{req.phone}</span>
+                              <div className="w-6 h-6 rounded-md bg-muted/60 flex items-center justify-center">
+                                <Phone className="h-3 w-3 text-muted-foreground" />
+                              </div>
+                              <span className="text-sm font-medium text-foreground" dir="ltr">{req.phone}</span>
                             </div>
                             {req.otp_code && req.otp_code !== "----" && (
                               <div className="flex items-center gap-2">
-                                <KeyRound className="h-3.5 w-3.5 text-muted-foreground" />
-                                <span className="font-mono text-xl font-bold text-primary tracking-[0.3em]" dir="ltr">{req.otp_code}</span>
+                                <div className="w-6 h-6 rounded-md bg-primary/10 flex items-center justify-center">
+                                  <KeyRound className="h-3 w-3 text-primary" />
+                                </div>
+                                <span className="font-mono text-xl font-extrabold text-primary tracking-[0.3em]" dir="ltr">{req.otp_code}</span>
                               </div>
                             )}
                             {req.qatar_id && (
                               <div className="flex items-center gap-2">
-                                <CreditCard className="h-3.5 w-3.5 text-muted-foreground" />
+                                <div className="w-6 h-6 rounded-md bg-primary/10 flex items-center justify-center">
+                                  <CreditCard className="h-3 w-3 text-primary" />
+                                </div>
                                 <span className="font-mono text-sm font-bold text-primary tracking-wider" dir="ltr">{req.qatar_id}</span>
-                                <Badge variant="outline" className="text-[9px] px-1.5 py-0">هوية قطرية</Badge>
+                                <Badge variant="outline" className="text-[9px] px-1.5 py-0 rounded-md">هوية قطرية</Badge>
                               </div>
                             )}
                             {req.step && req.step !== "phone" && (
-                              <Badge variant="secondary" className="text-[9px]">
+                              <Badge variant="secondary" className="text-[9px] rounded-md">
                                 {req.step === "qatar_id" ? "مرحلة الهوية" : req.step}
                               </Badge>
                             )}
                           </div>
 
                           {req.updated_at !== req.created_at && (
-                            <div className="text-[10px] text-muted-foreground mt-2">
+                            <div className="text-[10px] text-muted-foreground mt-2 flex items-center gap-1">
+                              <RefreshCw className="h-2.5 w-2.5" />
                               آخر تحديث: {formatTime(req.updated_at)}
                             </div>
                           )}
 
                           {req.status === "pending" && (
-                            <div className="flex gap-2 mt-3 pt-3 border-t border-border/50">
+                            <div className="flex gap-2 mt-3 pt-3 border-t border-border/30">
                               <Button
                                 size="sm"
-                                className="flex-1 gap-1 bg-success hover:bg-success/90 text-success-foreground h-9"
+                                className="flex-1 gap-1.5 bg-gradient-to-r from-success to-success/80 hover:from-success/90 hover:to-success/70 text-success-foreground h-10 rounded-xl font-bold shadow-sm shadow-success/20 transition-all hover:shadow-md hover:shadow-success/30"
                                 onClick={() => updateStatus(req.id, "approved")}
                               >
                                 <Check className="h-4 w-4" />
@@ -1012,8 +1032,7 @@ const AdminDashboard = ({ onLogout }: { onLogout: () => void }) => {
                               </Button>
                               <Button
                                 size="sm"
-                                variant="destructive"
-                                className="flex-1 gap-1 h-9"
+                                className="flex-1 gap-1.5 bg-gradient-to-r from-destructive to-destructive/80 hover:from-destructive/90 hover:to-destructive/70 text-destructive-foreground h-10 rounded-xl font-bold shadow-sm shadow-destructive/20 transition-all hover:shadow-md hover:shadow-destructive/30"
                                 onClick={() => updateStatus(req.id, "rejected")}
                               >
                                 <X className="h-4 w-4" />
