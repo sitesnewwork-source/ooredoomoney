@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { LogIn, Trophy, Gift, Users } from "lucide-react";
 import ooredooLogo from "@/assets/ooredoo-logo.webp";
-import goldPromo from "@/assets/gold-promo.png";
+import goldBars from "@/assets/gold-bars.png";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -14,11 +14,11 @@ const Home = () => {
         <img src={ooredooLogo} alt="Ooredoo Money" className="h-14 object-contain" />
 
         {/* Gold Promo Image */}
-        <div className="w-full rounded-2xl overflow-hidden border border-border shadow-lg">
+        <div className="w-48 h-48 flex items-center justify-center">
           <img
-            src={goldPromo}
-            alt="اربح سبائك الذهب"
-            className="w-full object-cover"
+            src={goldBars}
+            alt="سبائك ذهب"
+            className="w-full h-full object-contain"
           />
         </div>
 
