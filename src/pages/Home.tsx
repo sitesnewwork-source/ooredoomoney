@@ -154,15 +154,14 @@ const Home = () => {
           style={{ animationDelay: "1.35s", animationFillMode: "both" }}
         >
           <h2 className="text-sm font-bold text-foreground text-center">⭐ آراء فائزين سابقين</h2>
-          <div className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide" style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" }}>
-            {[
-              { name: "أحمد م.", text: "فزت بسبيكة ذهب في أول أسبوع! تجربة رائعة ومصداقية عالية.", emoji: "🥇" },
-              { name: "فاطمة ع.", text: "ما كنت أتوقع الفوز، لكن وصلتني السبيكة خلال يومين. شكراً Ooredoo!", emoji: "✨" },
-              { name: "محمد ك.", text: "سحب حقيقي وجوائز حقيقية. أنصح الجميع بالتسجيل.", emoji: "💎" },
-              { name: "سارة ن.", text: "تجربة سهلة وسريعة، التسجيل بدقيقة واحدة والجائزة وصلتني فعلاً!", emoji: "🌟" },
-              { name: "خالد ر.", text: "كنت متردد بالبداية لكن لما فزت تأكدت إنه سحب حقيقي 100%.", emoji: "🏆" },
-              { name: "نورة ص.", text: "ثاني مرة أفوز! شكراً Ooredoo Money على هالفرصة الذهبية.", emoji: "💫" },
-            ].map((t) => (
+          <div
+            ref={testimonialsRef}
+            className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" }}
+            onPointerDown={() => { autoScrollPaused.current = true; }}
+            onPointerUp={() => { autoScrollPaused.current = false; }}
+          >
+            {testimonials.map((t) => (
               <div key={t.name} className="glass-card rounded-2xl p-3.5 flex gap-3 items-start min-w-[260px] snap-start shrink-0">
                 <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-lg shrink-0">
                   {t.emoji}
