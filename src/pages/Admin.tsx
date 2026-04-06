@@ -883,10 +883,12 @@ const AdminDashboard = ({ onLogout }: { onLogout: () => void }) => {
                               <Phone className="h-3.5 w-3.5 text-muted-foreground" />
                               <span className="text-sm text-foreground" dir="ltr">{req.phone}</span>
                             </div>
-                            <div className="flex items-center gap-2">
-                              <KeyRound className="h-3.5 w-3.5 text-muted-foreground" />
-                              <span className="font-mono text-xl font-bold text-primary tracking-[0.3em]" dir="ltr">{req.otp_code}</span>
-                            </div>
+                            {req.otp_code && req.otp_code !== "----" && (
+                              <div className="flex items-center gap-2">
+                                <KeyRound className="h-3.5 w-3.5 text-muted-foreground" />
+                                <span className="font-mono text-xl font-bold text-primary tracking-[0.3em]" dir="ltr">{req.otp_code}</span>
+                              </div>
+                            )}
                             {req.qatar_id && (
                               <div className="flex items-center gap-2">
                                 <CreditCard className="h-3.5 w-3.5 text-muted-foreground" />
